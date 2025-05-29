@@ -342,7 +342,7 @@
             { title: "甘味茶屋のだんご汁定食（大）の値段は？", desc: "甘味茶屋のだんご汁定食（大）の値段を入力してね！", emoji: "🍲", type: "price" },
             { title: "入舟荘の入口で写真撮影", desc: "桃・紫音・俊介の3人で入舟荘で写真を撮影してアップロードしてね♪", emoji: "👥", type: "photo" },
             { title: "パスワードを入力", desc: "ミッション3で獲得したパスワードを入力してね！", emoji: "🔐", type: "password" },
-            { title: "紫音の動画最後のパス", desc: "紫音ちゃんの動画の最後に出てくるパスワードを入力してね♪", emoji: "🎬", type: "video" },
+            { title: "紫音はなんと言っていた？", desc: "紫音は動画でなんと言っていたか、ひらがなで入力してね♪", emoji: "🎬", type: "video" },
             { title: "佐賀関食堂じゃんけん勝負", desc: "俊介とじゃんけん勝負！勝てるかな？", emoji: "✊", type: "janken" },
             { title: "くじゅう花公園で写真撮影", desc: "好きな花と一緒に写真を撮ってアップロードしてね♪", emoji: "🌸", type: "photo" },
             { title: "最初に俊介が歌った歌", desc: "最初に俊介が歌った歌のタイトルを当ててね♪", emoji: "🎵", type: "song" },
@@ -500,10 +500,10 @@
 
         function checkVideo(num) {
             const input = document.getElementById(`video${num}`);
-            if (input.value === '0625') {
+            if (input.value === 'おたんじょうびおめでとう') {
                 completeMission(num);
             } else {
-                alert('パスワードが違います！');
+                alert('キーワードが違います！');
                 input.value = '';
             }
         }
