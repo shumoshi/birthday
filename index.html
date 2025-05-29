@@ -20,6 +20,75 @@
             align-items: center;
         }
 
+        .password-screen {
+            background: linear-gradient(135deg, #fff0f8, #ffe6f2);
+            border-radius: 30px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(255,182,193,0.5);
+            border: 4px solid #ffb3d9;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .password-title {
+            color: #d63384;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .password-message {
+            color: #6f42c1;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #ffb3d9;
+            border-radius: 15px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            background: #fff8fc;
+            text-align: center;
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: #d63384;
+            box-shadow: 0 0 10px rgba(255,182,193,0.5);
+        }
+
+        .password-button {
+            background: linear-gradient(45deg, #ff99cc, #ffb3d9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255,182,193,0.4);
+        }
+
+        .password-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255,182,193,0.6);
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.show {
+            display: flex;
+        }
+
         .container {
             background: linear-gradient(135deg, #fff0f8, #ffe6f2);
             border-radius: 30px;
@@ -87,19 +156,79 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="decoration">🎉</div>
-        <h1 class="title">桃子生誕祭2DAYS</h1>
-        <div class="message">
-            この2日間を思いっきり楽しんでもらうために<br>
+    <!-- パスワード認証画面 -->
+    <div class="password-screen" id="passwordScreen">
+        <div class="decoration">🔐</div>
+        <h1 class="password-title">パスワード認証</h1>
+        <div class="password-message">
+            このサイトは桃子専用です♡<br>
+            誕生日を入力してね♪
+        </div>
+        <input type="password" class="password-input" id="passwordInput" placeholder="パスワードを入力" maxlength="4">
+        <br>
+        <button class="password-button" onclick="checkPassword()">
+            ✨ 入場する ✨
+        </button>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="decoration">🎉🍰</div>
+            <h1 class="title">桃子生誕祭2DAYS</h1>
+            <div class="message">
+　　　　　　　この2日間を思いっきり楽しんでもらうために<br>
             桃子専用のサイトを用意しました♡<br>
             旅行とあわせて楽しんでね！
+            </div>
+            <div class="decoration">🍑</div>
+            
+            <a href="mission.html" class="start-button">
+                ✨ ミッションスタート！ ✨
+            </a>
+
         </div>
-        <div class="decoration">🍑</div>
-        
-        <a href="mission.html" class="start-button">
-            ✨ ミッションスタート！ ✨
-        </a>
     </div>
+
+    <script>
+        // パスワード認証
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const passwordScreen = document.getElementById('passwordScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (input.value === '0625') {
+                // 認証成功
+                passwordScreen.style.display = 'none';
+                mainContent.classList.add('show');
+                
+                // パスワード認証状態を保存（セッション中のみ）
+                sessionStorage.setItem('authenticated', 'true');
+            } else {
+                // 認証失敗
+                alert('パスワードが違います');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Enterキーでも認証
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // ページ読み込み時に認証状態をチェック
+        window.addEventListener('load', function() {
+            const isAuthenticated = sessionStorage.getItem('authenticated');
+            if (isAuthenticated === 'true') {
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('mainContent').classList.add('show');
+            } else {
+                document.getElementById('passwordInput').focus();
+            }
+        });
+    </script>
 </body>
 </html>
