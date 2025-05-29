@@ -83,6 +83,10 @@
 
         .main-content {
             display: none;
+            width: 100%;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
         }
 
         .main-content.show {
@@ -140,17 +144,22 @@
 
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
-            .container {
+            .password-screen, .container {
                 padding: 30px 20px;
+                width: 95%;
             }
             
-            .title {
-                font-size: 26px;
+            .password-title, .title {
+                font-size: 24px;
             }
             
             .start-button {
-                font-size: 20px;
-                padding: 15px 30px;
+                font-size: 18px;
+                padding: 15px 25px;
+            }
+            
+            .main-content {
+                padding: 10px;
             }
         }
     </style>
@@ -162,7 +171,7 @@
         <h1 class="password-title">パスワード認証</h1>
         <div class="password-message">
             このサイトは桃子専用です♡<br>
-            誕生日を入力してね♪
+            誕生日を入力してください
         </div>
         <input type="password" class="password-input" id="passwordInput" placeholder="パスワードを入力" maxlength="4">
         <br>
@@ -174,19 +183,18 @@
     <!-- メインコンテンツ -->
     <div class="main-content" id="mainContent">
         <div class="container">
-            <div class="decoration">🎉🍰</div>
+            <div class="decoration">🎉</div>
             <h1 class="title">桃子生誕祭2DAYS</h1>
             <div class="message">
                 この2日間を思いっきり楽しんでもらうために<br>
                 桃子専用のサイトを用意しました♡<br>
-                旅行とあわせて楽しんでね！
+                旅行と併せて楽しんでね！
             </div>
-            <div class="decoration">🍑</div>
+            <div class="decoration">🍑🍌🟣</div>
             
             <a href="mission.html" class="start-button">
                 ✨ ミッションスタート！ ✨
             </a>
-
         </div>
     </div>
 
