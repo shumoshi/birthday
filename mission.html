@@ -308,8 +308,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 ミッション一覧 🎯</h1>
-            <p>ミッションをクリアしてスクラッチで景品をゲットしよう♡</p>
+            <h1>🍌 ミッション一覧 🍌</h1>
+            <p>ミッションをクリアしよう！</p>
+            <p>クリアするとスクラッチに1回挑戦できるよ</p>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill">スタート！</div>
             </div>
@@ -325,27 +326,23 @@
 
         <div class="completion-message" id="completionMessage">
             <h2>🎉 全ミッション制覇！ 🎉</h2>
-            <p>おめでとう！全てのミッションをクリアしました♡<br>素敵な2日間になりそうですね✨</p>
+            <p>おかえり＾＾<br>楽しんでもらえたかな？✨</p>
         </div>
 
         <div class="mission-grid" id="missionGrid">
             <!-- ミッションが動的に生成される -->
         </div>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="index.html" class="back-button">🔙 最初に戻る</a>
-        </div>
-        
         <button class="reset-button" onclick="resetAll()">🔄 リセット</button>
     </div>
 
     <script>
         let missions = [
-            { title: "出発前に写真を撮ろう", desc: "2日間の旅行の出発前に記念写真を撮ってアップロードしてね♪", emoji: "📷", type: "photo" },
-            { title: "甘味茶屋のだんご汁定食（大）の値段は？", desc: "甘味茶屋のだんご汁定食（大）の値段を当ててね！", emoji: "🍲", type: "price" },
-            { title: "入舟荘の入口で写真撮影", desc: "3人で入舟荘の入口で写真を撮影してアップロードしてね♪", emoji: "👥", type: "photo" },
+            { title: "出発前に写真を撮ろう", desc: "出発前に記念写真を撮ってアップロードしてね♪", emoji: "📷", type: "photo" },
+            { title: "甘味茶屋のだんご汁定食（大）の値段は？", desc: "甘味茶屋のだんご汁定食（大）の値段を入力してね！", emoji: "🍲", type: "price" },
+            { title: "入舟荘の入口で写真撮影", desc: "桃・紫音・俊介の3人で入舟荘で写真を撮影してアップロードしてね♪", emoji: "👥", type: "photo" },
             { title: "パスワードを入力", desc: "ミッション3で獲得したパスワードを入力してね！", emoji: "🔐", type: "password" },
-            { title: "紫音の動画最後のパス", desc: "紫音ちゃんの動画の最後に出てくるパスワードを入力してね♪", emoji: "🎬", type: "video" },
+            { title: "紫音はなんと言っていた？", desc: "紫音は動画でなんと言っていたか、ひらがなで入力してね♪", emoji: "🎬", type: "video" },
             { title: "佐賀関食堂じゃんけん勝負", desc: "俊介とじゃんけん勝負！勝てるかな？", emoji: "✊", type: "janken" },
             { title: "くじゅう花公園で写真撮影", desc: "好きな花と一緒に写真を撮ってアップロードしてね♪", emoji: "🌸", type: "photo" },
             { title: "最初に俊介が歌った歌", desc: "最初に俊介が歌った歌のタイトルを当ててね♪", emoji: "🎵", type: "song" },
@@ -479,12 +476,9 @@
             if (input.files.length > 0) {
                 const file = input.files[0];
                 
-                // ファイル情報をアラートで表示（デバッグ用）
-                alert(`ファイル情報\n名前: ${file.name}\nサイズ: ${Math.round(file.size/1024)}KB\nタイプ: ${file.type}`);
-                
-                // ファイルサイズチェック（5MB制限）
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('写真のファイルサイズが大きすぎます。5MB以下の写真を選択してください。');
+                // ファイルサイズチェック（10MB制限）
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('写真のファイルサイズが大きすぎます。10MB以下の写真を選択してください。');
                     return;
                 }
                 
@@ -494,27 +488,73 @@
                     return;
                 }
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        alert('写真の読み込み完了！保存中...');
-                        let photos = JSON.parse(localStorage.getItem('photos') || '[]');
-                        photos.push(e.target.result);
-                        localStorage.setItem('photos', JSON.stringify(photos));
-                        alert('写真の保存完了！');
-                        showPhotos();
-                        completeMission(num);
-                    } catch (error) {
-                        alert(`保存エラー: ${error.message}`);
-                    }
-                };
-                reader.onerror = function() {
-                    alert('写真の読み込みに失敗しました。');
-                };
-                reader.readAsDataURL(file);
+                // 画像を圧縮してから保存
+                compressAndSaveImage(file, num);
             } else {
                 alert('写真を選択してください！');
             }
+        }
+
+        // 画像圧縮機能
+        function compressAndSaveImage(file, missionNum) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                // 最大サイズを800x600に制限
+                const maxWidth = 800;
+                const maxHeight = 600;
+                let { width, height } = img;
+                
+                // アスペクト比を保持してリサイズ
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = (width * maxHeight) / height;
+                        height = maxHeight;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // 画像を描画
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // 圧縮した画像をBase64に変換（品質70%）
+                const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+                
+                try {
+                    let photos = JSON.parse(localStorage.getItem('photos') || '[]');
+                    photos.push(compressedData);
+                    localStorage.setItem('photos', JSON.stringify(photos));
+                    alert('写真を圧縮して保存しました！');
+                    showPhotos();
+                    completeMission(missionNum);
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        alert('写真の保存容量が足りません。古い写真を削除するか、より小さい写真を使用してください。');
+                    } else {
+                        alert(`保存エラー: ${error.message}`);
+                    }
+                }
+            };
+            
+            img.onerror = function() {
+                alert('画像の読み込みに失敗しました。');
+            };
+            
+            // FileReaderで画像を読み込み
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function checkPass(num) {
@@ -529,10 +569,10 @@
 
         function checkVideo(num) {
             const input = document.getElementById(`video${num}`);
-            if (input.value === '0625') {
+            if (input.value === 'おたんじょうびおめでとう') {
                 completeMission(num);
             } else {
-                alert('パスワードが違います！');
+                alert('キーワードが違います！');
                 input.value = '';
             }
         }
@@ -573,7 +613,7 @@
                 fill.style.width = "100%";
                 document.getElementById('completionMessage').classList.add('show');
             } else {
-                fill.textContent = `進行中... ${count}個クリア！`;
+                fill.textContent = `${count}個クリア！`;
                 fill.style.width = ((count / 9) * 100) + '%';
             }
         }
