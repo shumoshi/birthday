@@ -13,10 +13,7 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
-      background-image: url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center top;
+      background: #ffeef5 url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png') center top / cover no-repeat;
     }
     .card-grid {
       display: grid;
@@ -30,7 +27,7 @@
       background: linear-gradient(135deg, #fff0f8, #ffe6f2);
       border: 4px solid #ffb3d9;
       border-radius: 15px;
-      height: 100px;
+      aspect-ratio: 1/1;
       cursor: pointer;
       box-shadow: 0 6px 15px rgba(255,182,193,0.4);
       transition: transform 0.3s ease;
@@ -44,7 +41,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(255, 240, 248, 0.9);
+      background: rgba(255, 240, 248, 0.95);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -62,19 +59,14 @@
       overflow: hidden;
       animation: zoomIn 0.5s ease;
     }
-    .scratch-background {
+    .scratch-background, .scratch-canvas {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 1;
-    }
-    .scratch-canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 2;
       border-radius: 15px;
     }
+    .scratch-canvas { z-index: 2; }
     .lottery-result, .action-buttons {
       display: none;
       margin-top: 30px;
@@ -161,7 +153,8 @@
 
     function selectCard(index) {
       document.getElementById('cardGrid').style.display = 'none';
-      document.getElementById('selectedCardContainer').style.display = 'flex';
+      const container = document.getElementById('selectedCardContainer');
+      container.style.display = 'flex';
 
       const prize = prizes[missionNumber];
       const background = document.getElementById('scratchBackground');
@@ -213,11 +206,13 @@
         ctx.arc(x, y, 20, 0, Math.PI * 2);
         ctx.fill();
         scratchedArea += Math.PI * 20 * 20;
+
         if (scratchedArea / totalArea > 0.8) revealAll();
       }
 
       function revealAll() {
         canvas.style.opacity = '0';
+        document.getElementById('scratchBackground').style.display = 'none';
         setTimeout(showResult, 1000);
       }
     }
