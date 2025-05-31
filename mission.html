@@ -103,24 +103,44 @@
         }
 
         .mission-card {
-            background: linear-gradient(135deg, #fff8fc, #ffe6f2);
-            border: 3px solid #ffb3d9;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(255,182,193,0.3);
-            transition: all 0.3s ease;
-            position: relative;
-        }
+    background: linear-gradient(135deg, rgba(255, 240, 248, 0.85), rgba(255, 230, 242, 0.85));
+    border: 5px double #ff99cc;
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(255, 182, 193, 0.5);
+    position: relative;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
 
-        .mission-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(255,182,193,0.4);
-        }
+.mission-card::before {
+    content: "💖";
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    background: #fff0f8;
+    border: 2px solid #ffb3d9;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(255, 182, 193, 0.4);
+}
 
-        .mission-card.completed {
-            background: linear-gradient(135deg, #e6ffe6, #ccffcc);
-            border-color: #66cc66;
-        }
+.mission-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(255, 182, 193, 0.6);
+}
+
+.mission-card .mission-title {
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 20px;
+    color: #ff66a3;
+    text-shadow: 1px 1px #fff0f8;
+}
 
         .mission-card.completed::before {
             content: '✨';
