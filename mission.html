@@ -103,7 +103,7 @@
         }
 
         .mission-card {
-    background: linear-gradient(135deg, rgba(255, 240, 248, 0.85), rgba(255, 230, 242, 0.85));
+    background: linear-gradient(135deg, rgba(255, 240, 248, 0.6), rgba(255, 230, 242, 0.6));
     border: 5px double #ff99cc;
     border-radius: 25px;
     padding: 30px;
@@ -113,22 +113,6 @@
     backdrop-filter: blur(4px);
 }
 
-.mission-card::before {
-    content: "💖";
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    background: #fff0f8;
-    border: 2px solid #ffb3d9;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 3px 10px rgba(255, 182, 193, 0.4);
-}
 
 .mission-card:hover {
     transform: translateY(-5px) scale(1.02);
@@ -141,14 +125,6 @@
     color: #ff66a3;
     text-shadow: 1px 1px #fff0f8;
 }
-
-        .mission-card.completed::before {
-            content: '✨';
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 20px;
-        }
         
         .mission-card.completed::after {
     content: '';
@@ -485,7 +461,7 @@
                 <div class="mission-header">
                     <div class="mission-number">${num}</div>
                     <div class="mission-title">${mission.title}</div>
-                    <div class="mission-status">${done ? '✅' : mission.emoji}</div>
+                    <div class="mission-status">${done ? '' : mission.emoji}</div>
                 </div>
                 <div class="mission-description">${mission.desc}</div>
                 <div class="mission-action">${actionHtml}</div>
