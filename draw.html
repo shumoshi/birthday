@@ -496,19 +496,27 @@
             }
             
             function scratchAt(pos) {
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                // 削った面積を計算
-                scratchedArea += Math.PI * 20 * 20;
-                
-                // 70%削られたら全て表示
-                if (scratchedArea / totalArea > 0.9) {
-                    revealAll();
-                }
-            }
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // ImageDataから透明ピクセルの割合を計算
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let transparentPixels = 0;
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] === 0) { // alpha値が0
+            transparentPixels++;
+        }
+    }
+
+    const totalPixels = canvas.width * canvas.height;
+    const percent = transparentPixels / totalPixels;
+
+    if (percent > 0.8) {
+        revealAll();
+    }
+}
             
             function revealAll() {
                 canvas.style.opacity = '0';
