@@ -150,14 +150,15 @@
         
         .lottery-result {
     display: none;
-    background: linear-gradient(135deg, #eafff1, #ffffff);
-    border: 4px solid #88ffcc;
+    background: linear-gradient(135deg, #fffbe6, #fff4c2); /* 金っぽい背景 */
+    border: 4px solid #ffd700;                             /* ゴールド枠 */
     border-radius: 20px;
     padding: 30px;
     margin: 30px 0;
     position: relative;
     z-index: 2;
-    box-shadow: 0 0 25px rgba(0,255,170,0.5), 0 0 50px rgba(255,255,255,0.3);
+    /* 金色の外発光＋内側キラキラ */
+    box-shadow: 0 0 30px 8px #ffe066, 0 0 18px 3px #ffd700 inset, 0 0 50px rgba(255,223,80,0.25);
     animation: sparkleBox 2s infinite alternate;
 }
 
