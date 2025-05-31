@@ -29,14 +29,14 @@
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #fff0f8, #ffe6f2);
-            padding: 25px;
-            border-radius: 20px;
-            border: 3px solid #ffb3d9;
-            box-shadow: 0 10px 30px rgba(255,182,193,0.3);
-        }
+    text-align: center;
+    margin-bottom: 30px;
+    background: rgba(255, 240, 248, 0.4); /* ←ここ！0.4に透過 */
+    padding: 25px;
+    border-radius: 20px;
+    border: 3px solid #ffb3d9;
+    box-shadow: 0 10px 30px rgba(255,182,193,0.3);
+}
 
         .header h1 {
             color: #d63384;
@@ -103,7 +103,7 @@
         }
 
         .mission-card {
-    background: linear-gradient(135deg, rgba(255, 240, 248, 0.4), rgba(255, 230, 242, 0.6));
+    background: linear-gradient(135deg, rgba(255, 240, 248, 0.4), rgba(255, 230, 242, 0.4));
     border: 5px double #ff99cc;
     border-radius: 25px;
     padding: 30px;
@@ -116,7 +116,7 @@
 
 .mission-card:hover {
     transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(255, 182, 193, 0.6);
+    box-shadow: 0 15px 40px rgba(255, 182, 193, 0.4);
 }
 
 .mission-card .mission-title {
