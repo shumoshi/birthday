@@ -1,580 +1,240 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>桃子生誕祭2DAYS - スクラッチ</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background-image: url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png');
-             background-size: cover;
-             background-repeat: no-repeat; 
-             background-position: center top; 
-        }
-
-        .lottery-container {
-            background: linear-gradient(135deg, #fff0f8, #ffe6f2);
-            border-radius: 30px;
-            padding: 50px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(255,182,193,0.5);
-            border: 4px solid #ffb3d9;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            overflow: visible;
-        }
-
-        .lottery-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, transparent 70%);
-            animation: sparkleBackground 4s infinite;
-        }
-
-        @keyframes sparkleBackground {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-        }
-
-        .lottery-title {
-            color: #d63384;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .mission-info {
-            color: #6f42c1;
-            font-size: 18px;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .lottery-wheel {
-            width: 350px;
-            height: 250px;
-            background: linear-gradient(135deg, #fff0f8, #ffe6f2);
-            border-radius: 15px;
-            margin: 0 auto 40px;
-            position: relative;
-            border: 6px solid #ffb3d9;
-            box-shadow: 0 15px 40px rgba(255,182,193,0.4);
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        .scratch-card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            cursor: grab;
-        }
-
-        .scratch-card:active {
-            cursor: grabbing;
-        }
-
-        .scratch-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #e6ffe6, #ccffcc);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #228b22;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .scratch-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            cursor: grab;
-            z-index: 5;
-        }
-
-        .scratch-canvas:active {
-            cursor: grabbing;
-        }
-
-        .scratch-instruction {
-            text-align: center;
-            color: #6f42c1;
-            font-size: 16px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .lottery-result {
-            display: none;
-            background: linear-gradient(45deg, #e6ffe6, #ccffcc);
-            border: 4px solid #66cc66;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .lottery-result.show {
-            display: block;
-            animation: resultAppear 1s ease;
-        }
-
-        @keyframes resultAppear {
-            0% { 
-                opacity: 0; 
-                transform: scale(0.5) rotateY(90deg);
-            }
-            50% {
-                transform: scale(1.1) rotateY(45deg);
-            }
-            100% { 
-                opacity: 1; 
-                transform: scale(1) rotateY(0deg);
-            }
-        }
-
-        .result-title {
-            color: #228b22;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .result-prize {
-            color: #d63384;
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .result-description {
-            color: #6f42c1;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .action-buttons {
-            display: none;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 30px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .action-buttons.show {
-            display: flex;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #ff99cc, #ffb3d9);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(255,182,193,0.4);
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(255,182,193,0.6);
-        }
-
-        .btn.secondary {
-            background: linear-gradient(45deg, #6f42c1, #8b5cf6);
-            box-shadow: 0 8px 20px rgba(111,66,193,0.3);
-        }
-
-        .btn.secondary:hover {
-            box-shadow: 0 12px 25px rgba(111,66,193,0.4);
-        }
-
-        .start-button {
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 30px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255,107,53,0.4);
-            position: relative;
-            z-index: 2;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .start-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255,107,53,0.6);
-        }
-
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #ff99cc;
-            animation: confettiFall 3s linear infinite;
-        }
-
-        @keyframes confettiFall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* レスポンシブ対応 */
-        @media (max-width: 768px) {
-            .lottery-container {
-                padding: 30px 20px;
-            }
-            
-            .lottery-wheel {
-                width: 220px;
-                height: 220px;
-            }
-            
-            .lottery-title {
-                font-size: 26px;
-            }
-            
-            .start-button {
-                font-size: 20px;
-                padding: 15px 30px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>桃子生誕祭2DAYS - スクラッチ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background-image: url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center top;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      max-width: 360px;
+      margin: 0 auto;
+      z-index: 1;
+    }
+    .card-grid .card {
+      background: linear-gradient(135deg, #fff0f8, #ffe6f2);
+      border: 4px solid #ffb3d9;
+      border-radius: 15px;
+      height: 100px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(255,182,193,0.4);
+      transition: transform 0.3s ease;
+    }
+    .card-grid .card:hover {
+      transform: scale(1.05);
+    }
+    .selected-card-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 240, 248, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      animation: fadeIn 0.4s ease;
+    }
+    .selected-card {
+      width: 80vw;
+      max-width: 350px;
+      height: 250px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      animation: zoomIn 0.5s ease;
+    }
+    .scratch-background {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+    .scratch-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      border-radius: 15px;
+    }
+    .lottery-result, .action-buttons {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .lottery-result.show, .action-buttons.show {
+      display: block;
+    }
+    .result-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .result-prize {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .result-description {
+      font-size: 16px;
+    }
+    .btn {
+      background: #ff99cc;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes zoomIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-    <div class="lottery-container">
-        <h1 class="lottery-title">🎉 ミッションクリア！ 🎉</h1>
-        <div class="mission-info" id="missionInfo">
-            ミッション完了おめでとう♡<br>スクラッチでご褒美をゲットしよう！
-        </div>
+  <div class="card-grid" id="cardGrid"></div>
 
-        <div class="scratch-instruction">
-            スクラッチを指でこすって景品を確認しよう♪
-        </div>
-
-        <div class="lottery-wheel" id="lotteryWheel">
-            <div class="scratch-card" id="scratchCard">
-                <div class="scratch-background" id="scratchBackground">
-                    <!-- 景品がここに表示される -->
-                </div>
-                <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
-            </div>
-        </div>
-
-        <button class="start-button" id="startButton" style="display: none;">
-            🪙 スクラッチを削る！ 🪙
-        </button>
-
-        <div class="lottery-result" id="lotteryResult">
-            <div class="result-title">ご褒美ゲット！✨</div>
-            <div class="result-prize" id="resultPrize"></div>
-            <div class="result-description" id="resultDescription"></div>
-        </div>
-
-        <div class="action-buttons" id="actionButtons">
-            <a href="#" class="btn" onclick="goToMissions()">
-                🍌 ミッション一覧に戻る
-            </a>
-        </div>
+  <div class="selected-card-container" id="selectedCardContainer" style="display:none;">
+    <div class="selected-card" id="selectedCard">
+      <div class="scratch-background" id="scratchBackground"></div>
+      <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
     </div>
+  </div>
 
-    <script>
-        // URLパラメータからミッション番号を取得
-        const urlParams = new URLSearchParams(window.location.search);
-        const missionNumber = parseInt(urlParams.get('mission')) || 1;
+  <div class="lottery-result" id="lotteryResult">
+    <div class="result-title">ご褒美ゲット！✨</div>
+    <div class="result-prize" id="resultPrize"></div>
+    <div class="result-description" id="resultDescription"></div>
+  </div>
 
-        // 景品データ
-        const prizes = {
-            1: {
-                name: "🥤 飲み物１本",
-                description: "好きな飲み物を1本選んでね♪\n炭酸？紅茶？まぁどっちかでしょう！"
-            },
-            2: {
-                name: "🍰 デザート１つ",
-                description: "ランチの後はデザートかな？コンビニでも良いし時間が合えばカフェでもいいね♡\n甘いものタイムを楽しんでね！"
-            },
-            3: {
-                name: "🔑 パスワード「0930」",
-                description: "次のミッションで使う特別なパスワード♪\n忘れんと思うけど覚えておいてね！"
-            },
-            4: {
-                name: "🎬 紫音の動画解禁",
-                description: "俊介から紫音のスペシャル動画が送られてくるよ！\n 最後までしっかり見てね！"
-            },
-            5: {
-                name: "🎁 誕生日プレゼント",
-                description: "何が入ってるかなあ♪\n後でゆっくり確認してみてね♡"
-            },
-            6: {
-                name: "💆‍♀️ マッサージ30分券",
-                description: "俊介による30分間のマッサージ券♡\n肩こりも疲れもスッキリしちゃおう！"
-            },
-            7: {
-                name: "🍭 コンビニで好きなもの１つ",
-                description: "また好きなものを選べるよ〜♪\n2回目だからちょっと違うものにしてみる？"
-            },
-            8: {
-                name: "💇‍♀️ 美容室プレゼント券",
-                description: "美容室にいくお金と時間を俊介からプレゼント！\nさらに綺麗になってくるんだよ！"
-            },
-            9: {
-                name: "💕 俊介とチュー",
-                description: "お疲れ様でした♡\n最高のご褒美で2日間の思い出を締めくくろう！"
-            }
-        };
+  <div class="action-buttons" id="actionButtons">
+    <a href="#" class="btn" onclick="goToMissions()">🍌 ミッション一覧に戻る</a>
+  </div>
 
-        // ページ読み込み時の初期化
-        window.addEventListener('load', function() {
-            const missionInfo = document.getElementById('missionInfo');
-            missionInfo.innerHTML = `ミッション${missionNumber}完了おめでとう♡<br>スクラッチで景品をゲットしよう！`;
-            
-            // 景品をセット
-            setupScratchCard();
-            
-            // スクラッチを初期化
-            initScratchCard();
-        });
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const missionNumber = parseInt(urlParams.get('mission')) || 1;
 
-        // スクラッチカードをセットアップ
-        function setupScratchCard() {
-            const background = document.getElementById('scratchBackground');
-            const prize = prizes[missionNumber];
-            
-            background.innerHTML = `
-                 <div style="text-align: center; background: white; width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <div style="font-size: 32px; margin-bottom: 10px;">${prize.name.split(' ')[0]}</div>
-                    <div style="font-size: 18px; line-height: 1.3;">${prize.name.substring(2)}</div>
-                </div>
-            `;
-        }
+    const prizes = {
+      1: { name: "🥤 飲み物１本", description: "好きな飲み物を選んでね♪" },
+      2: { name: "🍰 デザート１つ", description: "甘いもの食べよ♡" },
+      3: { name: "🔑 パスワード「0930」", description: "次のミッションで使ってね！" },
+      4: { name: "🎬 紫音の動画解禁", description: "スペシャル動画が見れるよ！" },
+      5: { name: "🎁 誕生日プレゼント", description: "ワクワクの中身♡" },
+      6: { name: "💆‍♀️ マッサージ30分券", description: "おつかれ癒してね〜" },
+      7: { name: "🍭 コンビニで好きなもの１つ", description: "好きなのどうぞ♪" },
+      8: { name: "💇‍♀️ 美容室プレゼント券", description: "もっと可愛くなるチャンス♪" },
+      9: { name: "💕 俊介とチュー", description: "ラブラブタイム♡" }
+    };
 
-        // スクラッチカードを初期化
-        function initScratchCard() {
-            const canvas = document.getElementById('scratchCanvas');
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.getBoundingClientRect();
-            
-            // キャンバスサイズを設定
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            
-            // スクラッチ面を描画
-            drawScratchSurface(ctx, canvas.width, canvas.height);
-            
-            // イベントリスナーを設定
-            setupScratchEvents(canvas, ctx);
-        }
+    window.addEventListener('load', () => {
+      const grid = document.getElementById('cardGrid');
+      for (let i = 1; i <= 9; i++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => selectCard(i);
+        grid.appendChild(card);
+      }
+    });
 
-        // スクラッチ面を描画
-        function drawScratchSurface(ctx, width, height) {
-            // シルバーのグラデーション
-            const gradient = ctx.createLinearGradient(0, 0, width, height);
-            gradient.addColorStop(0, '#E0E0E0');
-            gradient.addColorStop(0.5, '#C0C0C0');
-            gradient.addColorStop(1, '#A0A0A0');
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, width, height);
-            
-            // テキストを描画
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 18px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('ここを削ってね♪', width/2, height/2);
-        }
+    function selectCard(index) {
+      document.getElementById('cardGrid').style.display = 'none';
+      document.getElementById('selectedCardContainer').style.display = 'flex';
 
-        // スクラッチイベントを設定
-        function setupScratchEvents(canvas, ctx) {
-            let isScratching = false;
-            let scratchedArea = 0;
-            const totalArea = canvas.width * canvas.height;
-            
-            // マウスイベント
-            canvas.addEventListener('mousedown', startScratch);
-            canvas.addEventListener('mousemove', scratch);
-            canvas.addEventListener('mouseup', stopScratch);
-            canvas.addEventListener('mouseleave', stopScratch);
-            
-            // タッチイベント
-            canvas.addEventListener('touchstart', handleTouchStart);
-            canvas.addEventListener('touchmove', handleTouchMove);
-            canvas.addEventListener('touchend', stopScratch);
-            
-            function startScratch(e) {
-                isScratching = true;
-                scratchAt(getEventPos(e));
-            }
-            
-            function scratch(e) {
-                if (!isScratching) return;
-                scratchAt(getEventPos(e));
-            }
-            
-            function stopScratch() {
-                isScratching = false;
-            }
-            
-            function handleTouchStart(e) {
-                e.preventDefault();
-                startScratch(e.touches[0]);
-            }
-            
-            function handleTouchMove(e) {
-                e.preventDefault();
-                if (isScratching) {
-                    scratchAt(getEventPos(e.touches[0]));
-                }
-            }
-            
-            function getEventPos(e) {
-                const rect = canvas.getBoundingClientRect();
-                return {
-                    x: (e.clientX || e.pageX) - rect.left,
-                    y: (e.clientY || e.pageY) - rect.top
-                };
-            }
-            
-            function scratchAt(pos) {
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                // 削った面積を計算
-                scratchedArea += Math.PI * 20 * 20;
-                
-                // 70%削られたら全て表示
-                if (scratchedArea / totalArea > 0.9) {
-                    revealAll();
-                }
-            }
-            
-            function revealAll() {
-                canvas.style.opacity = '0';
-                canvas.style.transition = 'opacity 0.5s ease';
-                
-                // 紙吹雪エフェクト
-                createConfetti();
-                
-                // 2秒後に結果表示
-                setTimeout(() => {
-                    showResult();
-                }, 2000);
-            }
-        }
+      const prize = prizes[missionNumber];
+      const background = document.getElementById('scratchBackground');
+      background.innerHTML = `<div style="background:white;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;">${prize.name}</div>`;
 
-        // スクラッチ開始（不要になったけど残しておく）
-        function startLottery() {
-            // 何もしない（直接削れるため）
-        }
+      initScratchCard();
+    }
 
-        // 結果表示
-        function showResult() {
-            const result = document.getElementById('lotteryResult');
-            const buttons = document.getElementById('actionButtons');
-            const prizeElement = document.getElementById('resultPrize');
-            const descElement = document.getElementById('resultDescription');
-            
-            const prize = prizes[missionNumber];
-            
-            prizeElement.textContent = prize.name;
-            descElement.textContent = prize.description;
-            
-            result.classList.add('show');
-            
-            // 1秒後にボタン表示
-            setTimeout(() => {
-                buttons.classList.add('show');
-            }, 1000);
-        }
+    function initScratchCard() {
+      const canvas = document.getElementById('scratchCanvas');
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
 
-        // ミッション一覧に戻る
-        function goToMissions() {
-            // 完了したミッション番号を渡してmission.htmlに戻る
-            window.location.href = `mission.html?completed=${missionNumber}`;
-        }
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, '#E0E0E0');
+      gradient.addColorStop(0.5, '#C0C0C0');
+      gradient.addColorStop(1, '#A0A0A0');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // 紙吹雪エフェクト
-        function createConfetti() {
-            const colors = ['#ff99cc', '#ffb3d9', '#d63384', '#6f42c1', '#66cc66'];
-            
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 3 + 's';
-                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    document.body.appendChild(confetti);
-                    
-                    // アニメーション後に削除
-                    setTimeout(() => {
-                        confetti.remove();
-                    }, 6000);
-                }, i * 50);
-            }
-        }
-    </script>
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('ここを削ってね♪', canvas.width / 2, canvas.height / 2);
+
+      setupScratchEvents(canvas, ctx);
+    }
+
+    function setupScratchEvents(canvas, ctx) {
+      let isScratching = false;
+      let scratchedArea = 0;
+      const totalArea = canvas.width * canvas.height;
+
+      canvas.addEventListener('mousedown', e => { isScratching = true; scratchAt(e); });
+      canvas.addEventListener('mousemove', e => isScratching && scratchAt(e));
+      canvas.addEventListener('mouseup', () => isScratching = false);
+      canvas.addEventListener('touchstart', e => { isScratching = true; scratchAt(e.touches[0]); });
+      canvas.addEventListener('touchmove', e => isScratching && scratchAt(e.touches[0]));
+      canvas.addEventListener('touchend', () => isScratching = false);
+
+      function scratchAt(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.pageX) - rect.left;
+        const y = (e.clientY || e.pageY) - rect.top;
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        scratchedArea += Math.PI * 20 * 20;
+        if (scratchedArea / totalArea > 0.8) revealAll();
+      }
+
+      function revealAll() {
+        canvas.style.opacity = '0';
+        setTimeout(showResult, 1000);
+      }
+    }
+
+    function showResult() {
+      const result = document.getElementById('lotteryResult');
+      const buttons = document.getElementById('actionButtons');
+      const prize = prizes[missionNumber];
+      document.getElementById('resultPrize').textContent = prize.name;
+      document.getElementById('resultDescription').textContent = prize.description;
+      result.classList.add('show');
+      setTimeout(() => buttons.classList.add('show'), 800);
+    }
+
+    function goToMissions() {
+      window.location.href = `mission.html?completed=${missionNumber}`;
+    }
+  </script>
 </body>
 </html>
