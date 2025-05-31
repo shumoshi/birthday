@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&display=swap" rel="stylesheet">
     <title>桃子生誕祭2DAYS - スクラッチ</title>
     <style>
         * {
@@ -13,7 +14,7 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family:  'Zen Kurenaido','Comic Sans MS', cursive, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -360,39 +361,39 @@
         // 景品データ
         const prizes = {
             1: {
-                name: "🥤 飲み物１本",
+                name: "🥤飲み物１本",
                 description: "好きな飲み物を1本選んでね♪\n炭酸？紅茶？まぁどっちかでしょう！"
             },
             2: {
-                name: "🍰 デザート１つ",
+                name: "🍰デザート１つ",
                 description: "ランチの後はデザートかな？コンビニでも良いし時間が合えばカフェでもいいね♡\n甘いものタイムを楽しんでね！"
             },
             3: {
-                name: "🔑 パスワード「0930」",
+                name: "🔑パスワード「0930」",
                 description: "次のミッションで使う特別なパスワード♪\n忘れんと思うけど覚えておいてね！"
             },
             4: {
-                name: "🎬 紫音の動画解禁",
+                name: "🎬紫音の動画解禁",
                 description: "俊介から紫音のスペシャル動画が送られてくるよ！\n 最後までしっかり見てね！"
             },
             5: {
-                name: "🎁 誕生日プレゼント",
+                name: "🎁誕生日プレゼント",
                 description: "何が入ってるかなあ♪\n後でゆっくり確認してみてね♡"
             },
             6: {
-                name: "💆‍♀️ マッサージ30分券",
+                name: "💆‍♀️マッサージ30分券",
                 description: "俊介による30分間のマッサージ券♡\n肩こりも疲れもスッキリしちゃおう！"
             },
             7: {
-                name: "🍭 コンビニで好きなもの１つ",
+                name: "🍭コンビニで好きなもの１つ",
                 description: "また好きなものを選べるよ〜♪\n2回目だからちょっと違うものにしてみる？"
             },
             8: {
-                name: "💇‍♀️ 美容室プレゼント券",
+                name: "💇‍♀️美容室プレゼント券",
                 description: "美容室にいくお金と時間を俊介からプレゼント！\nさらに綺麗になってくるんだよ！"
             },
             9: {
-                name: "💕 俊介とチュー",
+                name: "💕俊介とチュー",
                 description: "お疲れ様でした♡\n最高のご褒美で2日間の思い出を締めくくろう！"
             }
         };
@@ -415,7 +416,7 @@
             const prize = prizes[missionNumber];
             
             background.innerHTML = `
-                 <div style="text-align: center; background: rgb(255,255,255,0.8); width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                 <div style="text-align: center; background: white; width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                     <div style="font-size: 32px; margin-bottom: 10px;">${prize.name.split(' ')[0]}</div>
                     <div style="font-size: 18px; line-height: 1.3;">${prize.name.substring(2)}</div>
                 </div>
