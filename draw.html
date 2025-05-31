@@ -256,31 +256,24 @@
             box-shadow: 0 15px 40px rgba(255,107,53,0.6);
         }
 
-        .confetti {
-    position: fixed;
-    width: 12px;
-    height: 12px;
-    background: radial-gradient(circle, #ffb3d9 0%, #ff99cc 100%);
-    border-radius: 50%;
-    animation: confettiFall 3s ease-out forwards;
-    pointer-events: none;
-    z-index: 999;
-}
+              .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff99cc;
+            animation: confettiFall 3s linear infinite;
+        }
 
         @keyframes confettiFall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg) scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(50vh) rotate(360deg) scale(1.2);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(100vh) rotate(720deg) scale(0.8);
-        opacity: 0;
-    }
-}
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
 
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
@@ -569,42 +562,6 @@
             // 完了したミッション番号を渡してmission.htmlに戻る
             window.location.href = `mission.html?completed=${missionNumber}`;
         }
-        
-        function showResult() {
-    const result = document.getElementById('lotteryResult');
-    const buttons = document.getElementById('actionButtons');
-    const prizeElement = document.getElementById('resultPrize');
-    const descElement = document.getElementById('resultDescription');
-
-    const prize = prizes[missionNumber];
-
-    // 🎊 くす玉画像を表示
-    const ball = document.createElement('img');
-    ball.src = 'https://i.ibb.co/jJ6qZHP/kusudama.png'; // ←お好きな画像でOK
-    ball.style.position = 'fixed';
-    ball.style.top = '10%';
-    ball.style.left = '50%';
-    ball.style.transform = 'translateX(-50%) scale(0)';
-    ball.style.transition = 'transform 0.5s ease';
-    ball.style.zIndex = '1000';
-    document.body.appendChild(ball);
-
-    setTimeout(() => {
-        ball.style.transform = 'translateX(-50%) scale(1)';
-    }, 100);
-
-    // 🎉 紙吹雪発射
-    createConfetti();
-
-    // 結果内容表示
-    prizeElement.textContent = prize.name;
-    descElement.textContent = prize.description;
-    result.classList.add('show');
-
-    setTimeout(() => {
-        buttons.classList.add('show');
-    }, 1000);
-}
 
         // 紙吹雪エフェクト
         function createConfetti() {
