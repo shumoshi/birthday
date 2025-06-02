@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,45 +13,28 @@
         }
 
         body {
-            font-family:  'Zen Kurenaido','Comic Sans MS', cursive, sans-serif;
+            font-family: 'Zen Kurenaido','Comic Sans MS', cursive, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             background-image: url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png');
-             background-size: cover;
-             background-repeat: no-repeat; 
-             background-position: center top; 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top;
         }
 
         .lottery-container {
-            background: rgba(255, 240, 248, 0.4);
+            background: rgba(255, 240, 248, 0.95);
             border-radius: 30px;
-            padding: 50px;
+            padding: 40px;
             text-align: center;
             box-shadow: 0 20px 60px rgba(255,182,193,0.5);
             border: 4px solid #ffb3d9;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             position: relative;
-            overflow: visible;
-        }
-
-        .lottery-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, transparent 70%);
-            animation: sparkleBackground 4s infinite;
-        }
-
-        @keyframes sparkleBackground {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
         }
 
         .lottery-title {
@@ -60,95 +42,96 @@
             font-size: 32px;
             font-weight: bold;
             margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .mission-info {
             color: #6f42c1;
             font-size: 18px;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 2;
+            margin-bottom: 30px;
         }
 
-        .lottery-wheel {
-  width: 100vw;       /* スマホ全幅 */
-  max-width: 400px;   /* デカすぎ防止 */
-  aspect-ratio: 7/5;  /* 画像の比率 */
-  position: relative;
-}
-.lottery-wheel img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-        .scratch-card {
-            width: 100%;
-            height: 100%;
+        .scratch-container {
             position: relative;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .scratch-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .scratch-area {
+            position: absolute;
             cursor: grab;
         }
 
-        .scratch-card:active {
+        .scratch-area:active {
             cursor: grabbing;
         }
 
-        .scratch-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #e6ffe6, #ccffcc);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #d63384;
-            text-align: center;
+        /* 赤枠のスクラッチエリア */
+        .scratch-red {
+            top: 14%;
+            left: 10%;
+            width: 80%;
+            height: 45%;
+        }
+
+        /* 青枠のスクラッチエリア */
+        .scratch-blue {
+            top: 65%;
+            left: 25%;
+            width: 50%;
+            height: 28%;
         }
 
         .scratch-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             border-radius: 10px;
-            cursor: grab;
-            z-index: 5;
         }
 
-        .scratch-canvas:active {
-            cursor: grabbing;
+        /* 削りカス効果 */
+        .scratch-particle {
+            position: fixed;
+            pointer-events: none;
+            width: 4px;
+            height: 4px;
+            background: #C0C0C0;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: particleFall 1s ease-out forwards;
+            z-index: 1000;
         }
 
-        .scratch-instruction {
-            text-align: center;
-            color: #6f42c1;
-            font-size: 16px;
-            margin-bottom: 20px;
-            font-weight: bold;
+        @keyframes particleFall {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--x), var(--y)) rotate(720deg);
+                opacity: 0;
+            }
         }
 
         .lottery-result {
             display: none;
-            background: rgb(255,255,255,0.8);
+            background: rgba(255,255,255,0.95);
             border: 6px solid #ffb3d9;
             border-radius: 20px;
             padding: 30px;
-            margin: 30px 0;  
-            position: relative;
-            z-index: 2;
+            margin: 30px 0;
+            animation: resultAppear 1s ease;
         }
 
         .lottery-result.show {
             display: block;
-            animation: resultAppear 1s ease;
         }
 
         @keyframes resultAppear {
@@ -191,8 +174,6 @@
             gap: 20px;
             justify-content: center;
             margin-top: 30px;
-            position: relative;
-            z-index: 2;
         }
 
         .action-buttons.show {
@@ -211,7 +192,6 @@
             transition: all 0.3s ease;
             box-shadow: 0 8px 20px rgba(255,182,193,0.4);
             text-decoration: none;
-            display: inline-block;
         }
 
         .btn:hover {
@@ -219,63 +199,15 @@
             box-shadow: 0 12px 25px rgba(255,182,193,0.6);
         }
 
-        .btn.secondary {
-            background: linear-gradient(45deg, #6f42c1, #8b5cf6);
-            box-shadow: 0 8px 20px rgba(111,66,193,0.3);
-        }
-
-        .btn.secondary:hover {
-            box-shadow: 0 12px 25px rgba(111,66,193,0.4);
-        }
-
-        .start-button {
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 30px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255,107,53,0.4);
-            position: relative;
-            z-index: 2;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .start-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255,107,53,0.6);
-        }
-
-              .confetti {
+        /* 紙吹雪 */
+        .confetti {
             position: fixed;
             width: 10px;
             height: 10px;
-            background: #ff99cc;
-            animation: confettiFall 3s linear infinite;
+            pointer-events: none;
+            animation: confettiFall 3s linear forwards;
+            z-index: 9999;
         }
-        
-        @keyframes confetti-fall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg) scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(50vh) rotate(180deg) scale(1.1);
-        opacity: 0.9;
-    }
-    100% {
-        transform: translateY(100vh) rotate(720deg) scale(0.8);
-        opacity: 0;
-    }
-}
 
         @keyframes confettiFall {
             0% {
@@ -288,24 +220,14 @@
             }
         }
 
-        /* レスポンシブ対応 */
+        /* レスポンシブ */
         @media (max-width: 768px) {
             .lottery-container {
                 padding: 30px 20px;
             }
             
-            .lottery-wheel {
-                width: 220px;
-                height: 220px;
-            }
-            
             .lottery-title {
                 font-size: 26px;
-            }
-            
-            .start-button {
-                font-size: 20px;
-                padding: 15px 30px;
             }
             
             .action-buttons {
@@ -319,21 +241,22 @@
     <div class="lottery-container">
         <h1 class="lottery-title">ミッションクリア🎉</h1>
         <div class="mission-info" id="missionInfo">
-            ミッション完了おめでとう♡<br>スクラッチでご褒美をゲットしよう！
+            ミッション完了おめでとう♡<br>スクラッチを削って景品を確認しよう！
         </div>
 
-        <div class="scratch-instruction">
-            スクラッチを指でこすって景品を確認しよう♪
+        <div class="scratch-container">
+            <img id="scratchImage" class="scratch-image" src="" alt="スクラッチカード">
+            
+            <!-- 赤枠のスクラッチエリア -->
+            <div class="scratch-area scratch-red" id="scratchRed">
+                <canvas class="scratch-canvas" id="canvasRed"></canvas>
+            </div>
+            
+            <!-- 青枠のスクラッチエリア -->
+            <div class="scratch-area scratch-blue" id="scratchBlue">
+                <canvas class="scratch-canvas" id="canvasBlue"></canvas>
+            </div>
         </div>
-
-<div class="lottery-wheel" id="lotteryWheel" style="position: relative; width: 350px; height: 250px;">
-    <img id="prizeImg" src="" style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
-    <canvas class="scratch-canvas" id="scratchCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius: 12px; z-index: 2;"></canvas>
-</div>
-
-        <button class="start-button" id="startButton" style="display: none;">
-            🪙 スクラッチを削る！ 🪙
-        </button>
 
         <div class="lottery-result" id="lotteryResult">
             <div class="result-title">ご褒美ゲット✨</div>
@@ -349,99 +272,355 @@
     </div>
 
     <script>
-        // 1. ミッション画像URLとテキスト定義（必要な分だけ入れて！）
-// 赤枠/青枠のcanvasサイズ＆位置（例：画像のサイズに合わせて）
-// 例：元画像が350x250の場合の比率で設定
-const redRect = { left: 30, top: 80, width: 150, height: 140 };   // 赤枠の座標とサイズ
-const blueRect = { left: 220, top: 180, width: 100, height: 50 }; // 青枠の座標とサイズ
+        // URLパラメータからミッション番号を取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const missionNumber = parseInt(urlParams.get('mission')) || 1;
 
-// 赤枠canvas生成
-function createScratchCanvas(target, opts, onCleared) {
-  const canvas = document.createElement('canvas');
-  canvas.width = opts.width;
-  canvas.height = opts.height;
-  canvas.style.position = 'absolute';
-  canvas.style.left = opts.left + 'px';
-  canvas.style.top = opts.top + 'px';
-  canvas.style.width = opts.width + 'px';
-  canvas.style.height = opts.height + 'px';
-  canvas.style.zIndex = 10;
-  target.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
+        // 景品データ
+        const prizes = {
+            1: {
+                name: "🥤 飲み物１本",
+                description: "好きな飲み物を1本選んでね♪\n炭酸？紅茶？まぁどっちかでしょう！"
+            },
+            2: {
+                name: "🍰 デザート１つ",
+                description: "ランチの後はデザートかな？コンビニでも良いし時間が合えばカフェでもいいね♡\n甘いものタイムを楽しんでね！"
+            },
+            3: {
+                name: "🔑 パスワード「0930」",
+                description: "次のミッションで使う特別なパスワード♪\n忘れんと思うけど覚えておいてね！"
+            },
+            4: {
+                name: "🎬 紫音の動画解禁",
+                description: "俊介から紫音のスペシャル動画が送られてくるよ！\n 最後までしっかり見てね！"
+            },
+            5: {
+                name: "🎁 誕生日プレゼント",
+                description: "何が入ってるかなあ♪\n後でゆっくり確認してみてね♡"
+            },
+            6: {
+                name: "💆‍♀️ マッサージ30分券",
+                description: "俊介による30分間のマッサージ券♡\n肩こりも疲れもスッキリしちゃおう！"
+            },
+            7: {
+                name: "🍭 コンビニで好きなもの１つ",
+                description: "また好きなものを選べるよ〜♪\n2回目だからちょっと違うものにしてみる？"
+            },
+            8: {
+                name: "💇‍♀️ 美容室プレゼント券",
+                description: "美容室にいくお金と時間を俊介からプレゼント！\nさらに綺麗になってくるんだよ！"
+            },
+            9: {
+                name: "💕 俊介とチュー",
+                description: "お疲れ様でした♡\n最高のご褒美で2日間の思い出を締めくくろう！"
+            }
+        };
 
-  // Grayout（ここはShunのグレー画像読込でもOK）
-  ctx.fillStyle = '#bcbcbc';
-  ctx.fillRect(0, 0, opts.width, opts.height);
+        // スクラッチ画像のURL
+        const scratchImages = {
+            1: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
+            2: "https://i.ibb.co/jvZJYYh0/142-20250602231944.png",
+            3: "https://i.ibb.co/Qjrs71KW/142-20250602232315.png",
+            4: "https://i.ibb.co/spfRstMb/142-20250602231843.png",
+            5: "https://i.ibb.co/Kzp9Cd1c/142-20250602231346.png",
+            6: "https://i.ibb.co/R4HPhFBY/142-20250602231605.png",
+            7: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
+            8: "https://i.ibb.co/fYSnDg3Y/142-20250602231750.png",
+            9: "https://i.ibb.co/B590hg28/142-20250602232347.png"
+        };
 
-  // 削りロジック
-  let isDown = false;
-  canvas.addEventListener('mousedown', e => { isDown = true; scratch(e); });
-  canvas.addEventListener('mousemove', e => { if(isDown) scratch(e); });
-  canvas.addEventListener('mouseup', () => { isDown = false; });
-  canvas.addEventListener('mouseleave', () => { isDown = false; });
-  canvas.addEventListener('touchstart', e => { isDown = true; scratch(e.touches[0]); });
-  canvas.addEventListener('touchmove', e => { if(isDown) scratch(e.touches[0]); });
-  canvas.addEventListener('touchend', () => { isDown = false; });
+        // 当たりエリアの設定
+        const winningAreas = {
+            red: [2, 4, 5, 6, 8], // 赤枠が当たりのミッション
+            blue: [1, 3, 7, 9]    // 青枠が当たりのミッション
+        };
 
-  function scratch(e) {
-    const rect = canvas.getBoundingClientRect();
-    const x = ((e.clientX || e.pageX) - rect.left) * (canvas.width / canvas.offsetWidth);
-    const y = ((e.clientY || e.pageY) - rect.top) * (canvas.height / canvas.offsetHeight);
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(x, y, 18, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
-    if (typeof opts.check == "function") opts.check(canvas, ctx, onCleared);
-  }
-  return canvas;
-}
+        // ページ読み込み時の初期化
+        window.addEventListener('load', function() {
+            const missionInfo = document.getElementById('missionInfo');
+            missionInfo.innerHTML = `ミッション${missionNumber}完了おめでとう♡<br>スクラッチを削って景品を確認しよう！`;
+            
+            // スクラッチ画像を設定
+            const scratchImage = document.getElementById('scratchImage');
+            scratchImage.src = scratchImages[missionNumber];
+            
+            // 画像読み込み完了後にスクラッチを初期化
+            scratchImage.onload = function() {
+                initScratchAreas();
+            };
+        });
 
-// 削り率計算用
-function checkErase(canvas, ctx, threshold, onCleared) {
-  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  let cleared = 0;
-  for (let i = 3; i < imgData.length; i += 4) {
-    if (imgData[i] === 0) cleared++;
-  }
-  if (cleared / (canvas.width * canvas.height) > threshold) {
-    // オープン処理（例：canvas.remove()やfadeout）
-    canvas.style.transition = 'opacity 0.5s';
-    canvas.style.opacity = 0;
-    setTimeout(() => {
-      canvas.remove();
-      if (onCleared) onCleared();
-    }, 500);
-  }
-}
+        // スクラッチエリアを初期化
+        function initScratchAreas() {
+            initScratchCanvas('canvasRed', 'red');
+            initScratchCanvas('canvasBlue', 'blue');
+        }
 
-// 使い方例：
-// ミッション番号取得
-const mission = parseInt(new URLSearchParams(location.search).get("mission") || "1");
-// 親要素取得（例：.lottery-wheelなど）
-const container = document.getElementById("lotteryWheel");
+        // スクラッチキャンバスを初期化
+        function initScratchCanvas(canvasId, areaType) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            
+            // キャンバスサイズを設定
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            
+            // スクラッチ面を描画
+            drawScratchSurface(ctx, canvas.width, canvas.height);
+            
+            // 当たり判定
+            const isWinning = (areaType === 'red' && winningAreas.red.includes(missionNumber)) ||
+                            (areaType === 'blue' && winningAreas.blue.includes(missionNumber));
+            
+            // イベントリスナーを設定
+            if (isWinning) {
+                setupScratchEvents(canvas, ctx, areaType);
+            } else {
+                // ハズレエリアでも削れるけど何も起きない
+                setupDummyScratchEvents(canvas, ctx);
+            }
+        }
 
-if ([2,4,5,6,8].includes(mission)) {
-  // 赤枠だけ有効
-  createScratchCanvas(container, {
-    ...redRect,
-    check: (canvas, ctx, cb) => checkErase(canvas, ctx, 0.9, cb)
-  }, () => {
-    // 赤枠オープン処理（ここでご褒美画面表示など呼ぶ）
-    showResult();
-  });
-} else if ([1,3,7,9].includes(mission)) {
-  // 青枠だけ有効
-  createScratchCanvas(container, {
-    ...blueRect,
-    check: (canvas, ctx, cb) => checkErase(canvas, ctx, 0.8, cb)
-  }, () => {
-    // 青枠オープン処理
-    showResult();
-  });
-}
+        // スクラッチ面を描画
+        function drawScratchSurface(ctx, width, height) {
+            // キラキラシルバーのグラデーション
+            const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width/2);
+            gradient.addColorStop(0, '#F0F0F0');
+            gradient.addColorStop(0.5, '#D0D0D0');
+            gradient.addColorStop(1, '#B0B0B0');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // キラキラ効果
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + (Math.random() * 0.5) + ')';
+                ctx.beginPath();
+                ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 2, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
 
-// ※canvasサイズやleft/topは画像サイズに合わせて調整してね！
+        // 当たりエリアのスクラッチイベント
+        function setupScratchEvents(canvas, ctx, areaType) {
+            let isScratching = false;
+            let scratchedPixels = 0;
+            const totalPixels = canvas.width * canvas.height;
+            const threshold = areaType === 'red' ? 0.9 : 0.8; // 赤は90%、青は80%
+            
+            // イベントハンドラー
+            function startScratch(e) {
+                isScratching = true;
+                scratchAt(getEventPos(e));
+            }
+            
+            function scratch(e) {
+                if (!isScratching) return;
+                scratchAt(getEventPos(e));
+            }
+            
+            function stopScratch() {
+                isScratching = false;
+            }
+            
+            function getEventPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.pageX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.pageY || e.touches[0].clientY) - rect.top;
+                return { x, y };
+            }
+            
+            function scratchAt(pos) {
+                // 削りエフェクト
+                createScratchParticles(pos, canvas);
+                
+                // 削る
+                ctx.globalCompositeOperation = 'destination-out';
+                
+                // グラデーション削り
+                const gradient = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 25);
+                gradient.addColorStop(0, 'rgba(0,0,0,1)');
+                gradient.addColorStop(0.5, 'rgba(0,0,0,0.8)');
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // 削った割合をチェック
+                checkScratchProgress();
+            }
+            
+            function checkScratchProgress() {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let transparent = 0;
+                
+                for (let i = 3; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] < 128) {
+                        transparent++;
+                    }
+                }
+                
+                const percent = transparent / (canvas.width * canvas.height);
+                
+                if (percent > threshold) {
+                    revealAll(canvas, areaType);
+                }
+            }
+            
+            // マウスイベント
+            canvas.addEventListener('mousedown', startScratch);
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('mouseup', stopScratch);
+            canvas.addEventListener('mouseleave', stopScratch);
+            
+            // タッチイベント
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startScratch(e.touches[0]);
+            });
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (isScratching) scratch(e.touches[0]);
+            });
+            canvas.addEventListener('touchend', stopScratch);
+        }
+
+        // ハズレエリアのスクラッチイベント（削れるけど何も起きない）
+        function setupDummyScratchEvents(canvas, ctx) {
+            let isScratching = false;
+            
+            function startScratch(e) {
+                isScratching = true;
+                scratchAt(getEventPos(e));
+            }
+            
+            function scratch(e) {
+                if (!isScratching) return;
+                scratchAt(getEventPos(e));
+            }
+            
+            function stopScratch() {
+                isScratching = false;
+            }
+            
+            function getEventPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.pageX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.pageY || e.touches[0].clientY) - rect.top;
+                return { x, y };
+            }
+            
+            function scratchAt(pos) {
+                // 削りエフェクト
+                createScratchParticles(pos, canvas);
+                
+                // 削る
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            
+            // イベント設定
+            canvas.addEventListener('mousedown', startScratch);
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('mouseup', stopScratch);
+            canvas.addEventListener('mouseleave', stopScratch);
+            
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startScratch(e.touches[0]);
+            });
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (isScratching) scratch(e.touches[0]);
+            });
+            canvas.addEventListener('touchend', stopScratch);
+        }
+
+        // 削りカスのパーティクル効果
+        function createScratchParticles(pos, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'scratch-particle';
+                particle.style.left = (rect.left + pos.x) + 'px';
+                particle.style.top = (rect.top + pos.y) + 'px';
+                
+                // ランダムな方向に飛ばす
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 20 + Math.random() * 30;
+                particle.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // 全体を表示
+        function revealAll(canvas, areaType) {
+            canvas.style.opacity = '0';
+            canvas.style.transition = 'opacity 0.5s ease';
+            
+            // 紙吹雪
+            createConfetti();
+            
+            // 結果表示
+            setTimeout(() => {
+                showResult();
+            }, 1500);
+        }
+
+        // 結果表示
+        function showResult() {
+            const result = document.getElementById('lotteryResult');
+            const buttons = document.getElementById('actionButtons');
+            const prizeElement = document.getElementById('resultPrize');
+            const descElement = document.getElementById('resultDescription');
+            
+            const prize = prizes[missionNumber];
+            
+            prizeElement.textContent = prize.name;
+            descElement.innerHTML = prize.description.replace(/\n/g, '<br>');
+            
+            result.classList.add('show');
+            
+            setTimeout(() => {
+                buttons.classList.add('show');
+            }, 1000);
+        }
+
+        // 紙吹雪エフェクト
+        function createConfetti() {
+            const colors = ['#ff99cc', '#ffb3d9', '#ff66b2', '#ff3399', '#ff0080'];
+            
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (5 + Math.random() * 10) + 'px';
+                confetti.style.height = (5 + Math.random() * 10) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        // ミッション一覧に戻る
+        function goToMissions() {
+            window.location.href = `mission.html?completed=${missionNumber}`;
+        }
     </script>
 </body>
 </html>
