@@ -439,14 +439,14 @@
                 ctx.globalCompositeOperation = 'destination-out';
                 
                 // グラデーション削り
-                const gradient = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 10);
+                const gradient = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 25);
                 gradient.addColorStop(0, 'rgba(0,0,0,1)');
                 gradient.addColorStop(0.5, 'rgba(0,0,0,0.8)');
                 gradient.addColorStop(1, 'rgba(0,0,0,0)');
                 
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 10, 0, 2 * Math.PI);
+                ctx.arc(pos.x, pos.y, 3, 0, 2 * Math.PI);
                 ctx.fill();
                 
                 // 削った割合をチェック
@@ -520,7 +520,7 @@
                 // 削る
                 ctx.globalCompositeOperation = 'destination-out';
                 ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 10, 0, 2 * Math.PI);
+                ctx.arc(pos.x, pos.y, 3, 0, 2 * Math.PI);
                 ctx.fill();
             }
             
