@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&family=Sawarabi+Mincho&display=swap" rel="stylesheet">
     <title>桃子生誕祭2DAYS</title>
     <style>
+        html, body {
+            height: 100%;
+        }
         body {
             font-family: 'Zen Kurenaido','Sawarabi Mincho', cursive, sans-serif;
             min-height: 100vh;
@@ -18,6 +21,9 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center top;
+        }
+        * {
+            box-sizing: border-box; /* ★全部に効かせる */
         }
         .password-screen, .container {
             background: linear-gradient(135deg, #fff0f8, #ffe6f2);
@@ -32,8 +38,19 @@
         .password-title { color: #d63384; font-size: 28px; font-weight: bold; margin-bottom: 20px; }
         .password-message { color: #6f42c1; font-size: 16px; margin-bottom: 30px; line-height: 1.6; }
         .password-input {
-            width: 100%; padding: 15px; border: 3px solid #ffb3d9; border-radius: 15px;
-            font-size: 18px; margin-bottom: 20px; background: #fff8fc; text-align: center; outline: none;
+            width: calc(100% - 6px); /* ★枠分の幅を調整して、絶対にはみ出さない */
+            padding: 15px;
+            border: 3px solid #ffb3d9;
+            border-radius: 15px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            background: #fff8fc;
+            text-align: center;
+            outline: none;
+            box-sizing: border-box; /* ★ダブルで安心！ */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         .password-input:focus { border-color: #d63384; box-shadow: 0 0 10px rgba(255,182,193,0.5); }
         .password-button {
@@ -43,8 +60,21 @@
             box-shadow: 0 8px 20px rgba(255,182,193,0.4);
         }
         .password-button:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255,182,193,0.6); }
-        .main-content { display: none; width: 100%; min-height: 100vh; justify-content: center; align-items: center; }
+        .main-content {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
         .main-content.show { display: flex; }
+        .letter-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .letter-box {
             background: #fff6fa;
             border-radius: 24px;
@@ -60,11 +90,23 @@
             line-height: 1.9;
             letter-spacing: 0.02em;
         }
+        .start-button-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 32px; /* ★ボックス下にスペース */
+        }
         .start-button {
             background: linear-gradient(45deg, #ff99cc, #ffb3d9);
-            color: white; text-decoration: none; padding: 20px 40px;
-            border-radius: 25px; font-size: 24px; font-weight: bold; display: inline-block;
-            transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(255,182,193,0.4); margin-top: 30px;
+            color: white;
+            text-decoration: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,182,193,0.4);
         }
         .start-button:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255,182,193,0.6); }
         .decoration { font-size: 48px; margin: 20px 0; }
@@ -94,17 +136,21 @@
 
     <!-- メインコンテンツ（手紙演出） -->
     <div class="main-content" id="mainContent">
-        <div class="letter-box" id="letterBox">
-            <!-- アニメーションで文字が書かれていく -->
+        <div class="letter-area">
+            <div class="letter-box" id="letterBox">
+                <!-- アニメーションで文字が書かれていく -->
+            </div>
+            <div class="start-button-area" id="startButtonArea" style="display:none;">
+                <a href="mission.html" class="start-button" id="startButton">
+                    ✨ ミッションスタート！ ✨
+                </a>
+            </div>
         </div>
-        <a href="mission.html" class="start-button" id="startButton" style="display:none;">
-            ✨ ミッションスタート！ ✨
-        </a>
     </div>
 
     <script>
         // 手紙の本文
-        const letterMessage = `桃子へ\n\nこの2日間を思いっきり楽しんでもらうために、あなた専用のサイトを用意しました♡\n\nふたりで素敵な思い出を作ろうね！\n\nShunより`;
+        const letterMessage = `桃子へ\n\nこの2日間を思いっきり楽しんでもらうために、桃子専用のサイトを用意しました♡\n\n頑張った〜！！\n\n３人で素敵な思い出を作ろうね！\n\n俊介より`;
 
         // パスワード認証
         function checkPassword() {
@@ -146,9 +192,9 @@
         // 手紙アニメーション
         function startLetterAnimation() {
             const box = document.getElementById('letterBox');
-            const startBtn = document.getElementById('startButton');
+            const startBtnArea = document.getElementById('startButtonArea');
             box.innerHTML = '';
-            startBtn.style.display = 'none';
+            startBtnArea.style.display = 'none';
 
             let i = 0;
             function typeWriter() {
@@ -160,9 +206,9 @@
                         box.innerHTML += char;
                     }
                     i++;
-                    setTimeout(typeWriter, 60); // 速度調整ここで
+                    setTimeout(typeWriter, 60); // 速度調整
                 } else {
-                    startBtn.style.display = 'inline-block';
+                    startBtnArea.style.display = 'flex';
                 }
             }
             typeWriter();
