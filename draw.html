@@ -74,17 +74,16 @@
         }
 
         .lottery-wheel {
-            width: 350px;
-            height: 250px;
-            background: linear-gradient(135deg, #fff0f8, #ffe6f2);
-            border-radius: 15px;
-            margin: 0 auto 40px;
-            position: relative;
-            border: 6px solid #ffb3d9;
-            box-shadow: 0 15px 40px rgba(255,182,193,0.4);
-            z-index: 2;
-            overflow: hidden;
-        }
+  width: 100vw;       /* スマホ全幅 */
+  max-width: 400px;   /* デカすぎ防止 */
+  aspect-ratio: 7/5;  /* 画像の比率 */
+  position: relative;
+}
+.lottery-wheel img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
         .scratch-card {
             width: 100%;
@@ -351,123 +350,98 @@
 
     <script>
         // 1. ミッション画像URLとテキスト定義（必要な分だけ入れて！）
-const missionImages = {
-  1: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
-  2: "https://i.ibb.co/jvZJYYh0/142-20250602231944.png",
-  3: "https://i.ibb.co/Qjrs71KW/142-20250602232315.png",
-  4: "https://i.ibb.co/spfRstMb/142-20250602231843.png",
-  5: "https://i.ibb.co/Kzp9Cd1c/142-20250602231346.png",
-  6: "https://i.ibb.co/R4HPhFBY/142-20250602231605.png",
-  7: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
-  8: "https://i.ibb.co/fYSnDg3Y/142-20250602231750.png",
-  9: "https://i.ibb.co/B590hg28/142-20250602232347.png"
-};
+// 赤枠/青枠のcanvasサイズ＆位置（例：画像のサイズに合わせて）
+// 例：元画像が350x250の場合の比率で設定
+const redRect = { left: 30, top: 80, width: 150, height: 140 };   // 赤枠の座標とサイズ
+const blueRect = { left: 220, top: 180, width: 100, height: 50 }; // 青枠の座標とサイズ
 
-// 景品データも引き継ぎOK（ここは今まで通り）
-const prizes = {
-  1: { name: "🥤 飲み物１本", description: "好きな飲み物を1本選んでね♪炭酸？紅茶？まぁどっちかでしょう！" },
-  2: { name: "🍰 デザート１つ", description: "ランチの後はデザートかな？コンビニでも良いし時間が合えばカフェでもいいね♡甘いものタイムを楽しんでね！" },
-  3: { name: "🔑 パスワード「0930」", description: "次のミッションで使う特別なパスワード♪忘れんと思うけど覚えておいてね！" },
-  4: { name: "🎬 紫音の動画解禁", description: "俊介から紫音のスペシャル動画が送られてくるよ！最後までしっかり見てね！" },
-  5: { name: "🎁 誕生日プレゼント", description: "何が入ってるかなあ♪後でゆっくり確認してみてね♡" },
-  6: { name: "💆‍♀️ マッサージ30分券", description: "俊介による30分間のマッサージ券♡肩こりも疲れもスッキリしちゃおう！" },
-  7: { name: "🍭 コンビニで好きなもの１つ", description: "また好きなものを選べるよ〜♪2回目だからちょっと違うものにしてみる？" },
-  8: { name: "💇‍♀️ 美容室プレゼント券", description: "美容室にいくお金と時間を俊介からプレゼント！さらに綺麗になってくるんだよ！" },
-  9: { name: "💕 俊介とチュー", description: "お疲れ様でした♡最高のご褒美で2日間の思い出を締めくくろう！" }
-};
-
-const urlParams = new URLSearchParams(window.location.search);
-const missionNumber = parseInt(urlParams.get('mission')) || 1;
-
-// 2. 画像セット＋スクラッチcanvasスタート
-window.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('prizeImg').src = missionImages[missionNumber];
-  setupScratchCanvas();
-});
-
-function setupScratchCanvas() {
-  const canvas = document.getElementById('scratchCanvas');
+// 赤枠canvas生成
+function createScratchCanvas(target, opts, onCleared) {
+  const canvas = document.createElement('canvas');
+  canvas.width = opts.width;
+  canvas.height = opts.height;
+  canvas.style.position = 'absolute';
+  canvas.style.left = opts.left + 'px';
+  canvas.style.top = opts.top + 'px';
+  canvas.style.width = opts.width + 'px';
+  canvas.style.height = opts.height + 'px';
+  canvas.style.zIndex = 10;
+  target.appendChild(canvas);
   const ctx = canvas.getContext('2d');
-  const wheel = document.getElementById('lotteryWheel');
-  const w = wheel.offsetWidth;
-  const h = wheel.offsetHeight;
-  canvas.width = w;
-  canvas.height = h;
 
-  // グレーのスクラッチ面
-  const gradient = ctx.createLinearGradient(0, 0, w, h);
-  gradient.addColorStop(0, '#e0e0e0');
-  gradient.addColorStop(0.5, '#bcbcbc');
-  gradient.addColorStop(1, '#c7c7c7');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, w, h);
-  for(let i=0;i<5000;i++){
-    ctx.fillStyle = `rgba(200,200,200,${Math.random()*0.2})`;
-    ctx.beginPath();
-    ctx.arc(Math.random()*w, Math.random()*h, Math.random()*2+1, 0, Math.PI*2);
-    ctx.fill();
-  }
-  ctx.fillStyle = "#888";
-  ctx.font = "bold 22px 'Zen Kurenaido', Arial";
-  ctx.textAlign = "center";
-  ctx.fillText("ここを削ってね♪", w/2, h/2);
+  // Grayout（ここはShunのグレー画像読込でもOK）
+  ctx.fillStyle = '#bcbcbc';
+  ctx.fillRect(0, 0, opts.width, opts.height);
 
-  // 削りイベント
+  // 削りロジック
   let isDown = false;
-  canvas.addEventListener('mousedown', e => { isDown=true; scratch(e); });
+  canvas.addEventListener('mousedown', e => { isDown = true; scratch(e); });
   canvas.addEventListener('mousemove', e => { if(isDown) scratch(e); });
-  canvas.addEventListener('mouseup', () => { isDown=false; });
-  canvas.addEventListener('mouseleave', ()=>{isDown=false;});
-  canvas.addEventListener('touchstart', e => { isDown=true; scratch(e.touches[0]); });
+  canvas.addEventListener('mouseup', () => { isDown = false; });
+  canvas.addEventListener('mouseleave', () => { isDown = false; });
+  canvas.addEventListener('touchstart', e => { isDown = true; scratch(e.touches[0]); });
   canvas.addEventListener('touchmove', e => { if(isDown) scratch(e.touches[0]); });
-  canvas.addEventListener('touchend', ()=>{isDown=false; });
+  canvas.addEventListener('touchend', () => { isDown = false; });
 
-  function scratch(e){
+  function scratch(e) {
     const rect = canvas.getBoundingClientRect();
-    const x = ((e.clientX || e.pageX) - rect.left);
-    const y = ((e.clientY || e.pageY) - rect.top);
+    const x = ((e.clientX || e.pageX) - rect.left) * (canvas.width / canvas.offsetWidth);
+    const y = ((e.clientY || e.pageY) - rect.top) * (canvas.height / canvas.offsetHeight);
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 30, 0, 2*Math.PI);
+    ctx.arc(x, y, 18, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
-    checkScratchCompletion();
+    if (typeof opts.check == "function") opts.check(canvas, ctx, onCleared);
   }
+  return canvas;
+}
 
-  function checkScratchCompletion() {
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    let cleared = 0;
-    for(let i=3; i<imgData.length; i+=4) {
-      if(imgData[i]===0) cleared++;
-    }
-    if(cleared / (canvas.width * canvas.height) > 0.8) {
-      canvas.style.transition = "opacity 0.5s";
-      canvas.style.opacity = 0;
-      setTimeout(()=> {
-        canvas.remove();
-        showResult();  // ← 削り終わったら自動で「ご褒美」画面に！
-      },500);
-    }
+// 削り率計算用
+function checkErase(canvas, ctx, threshold, onCleared) {
+  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  let cleared = 0;
+  for (let i = 3; i < imgData.length; i += 4) {
+    if (imgData[i] === 0) cleared++;
+  }
+  if (cleared / (canvas.width * canvas.height) > threshold) {
+    // オープン処理（例：canvas.remove()やfadeout）
+    canvas.style.transition = 'opacity 0.5s';
+    canvas.style.opacity = 0;
+    setTimeout(() => {
+      canvas.remove();
+      if (onCleared) onCleared();
+    }, 500);
   }
 }
 
-// 3. showResult()は今まで通り
-function showResult() {
-  const result = document.getElementById('lotteryResult');
-  const buttons = document.getElementById('actionButtons');
-  const prizeElement = document.getElementById('resultPrize');
-  const descElement = document.getElementById('resultDescription');
+// 使い方例：
+// ミッション番号取得
+const mission = parseInt(new URLSearchParams(location.search).get("mission") || "1");
+// 親要素取得（例：.lottery-wheelなど）
+const container = document.getElementById("lotteryWheel");
 
-  const prize = prizes[missionNumber];
-
-  prizeElement.textContent = prize.name;
-  descElement.textContent = prize.description;
-
-  result.classList.add('show');
-  setTimeout(() => {
-    buttons.classList.add('show');
-  }, 1000);
+if ([2,4,5,6,8].includes(mission)) {
+  // 赤枠だけ有効
+  createScratchCanvas(container, {
+    ...redRect,
+    check: (canvas, ctx, cb) => checkErase(canvas, ctx, 0.9, cb)
+  }, () => {
+    // 赤枠オープン処理（ここでご褒美画面表示など呼ぶ）
+    showResult();
+  });
+} else if ([1,3,7,9].includes(mission)) {
+  // 青枠だけ有効
+  createScratchCanvas(container, {
+    ...blueRect,
+    check: (canvas, ctx, cb) => checkErase(canvas, ctx, 0.8, cb)
+  }, () => {
+    // 青枠オープン処理
+    showResult();
+  });
 }
+
+// ※canvasサイズやleft/topは画像サイズに合わせて調整してね！
     </script>
 </body>
 </html>
