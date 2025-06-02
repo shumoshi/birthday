@@ -327,14 +327,10 @@
             スクラッチを指でこすって景品を確認しよう♪
         </div>
 
-        <div class="lottery-wheel" id="lotteryWheel">
-            <div class="scratch-card" id="scratchCard">
-                <div class="scratch-background" id="scratchBackground">
-                    <!-- 景品がここに表示される -->
-                </div>
-                <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
-            </div>
-        </div>
+<div class="lottery-wheel" id="lotteryWheel" style="position: relative; width: 350px; height: 250px;">
+    <img id="prizeImg" src="" style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
+    <canvas class="scratch-canvas" id="scratchCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius: 12px; z-index: 2;"></canvas>
+</div>
 
         <button class="start-button" id="startButton" style="display: none;">
             🪙 スクラッチを削る！ 🪙
@@ -354,251 +350,123 @@
     </div>
 
     <script>
-        // URLパラメータからミッション番号を取得
-        const urlParams = new URLSearchParams(window.location.search);
-        const missionNumber = parseInt(urlParams.get('mission')) || 1;
+        // 1. ミッション画像URLとテキスト定義（必要な分だけ入れて！）
+const missionImages = {
+  1: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
+  2: "https://i.ibb.co/jvZJYYh0/142-20250602231944.png",
+  3: "https://i.ibb.co/Qjrs71KW/142-20250602232315.png",
+  4: "https://i.ibb.co/spfRstMb/142-20250602231843.png",
+  5: "https://i.ibb.co/Kzp9Cd1c/142-20250602231346.png",
+  6: "https://i.ibb.co/R4HPhFBY/142-20250602231605.png",
+  7: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
+  8: "https://i.ibb.co/fYSnDg3Y/142-20250602231750.png",
+  9: "https://i.ibb.co/B590hg28/142-20250602232347.png"
+};
 
-        // 景品データ
-        const prizes = {
-            1: {
-                name: "🥤 飲み物１本",
-                description: "好きな飲み物を1本選んでね♪\n炭酸？紅茶？まぁどっちかでしょう！"
-            },
-            2: {
-                name: "🍰 デザート１つ",
-                description: "ランチの後はデザートかな？コンビニでも良いし時間が合えばカフェでもいいね♡\n甘いものタイムを楽しんでね！"
-            },
-            3: {
-                name: "🔑 パスワード「0930」",
-                description: "次のミッションで使う特別なパスワード♪\n忘れんと思うけど覚えておいてね！"
-            },
-            4: {
-                name: "🎬 紫音の動画解禁",
-                description: "俊介から紫音のスペシャル動画が送られてくるよ！\n 最後までしっかり見てね！"
-            },
-            5: {
-                name: "🎁 誕生日プレゼント",
-                description: "何が入ってるかなあ♪\n後でゆっくり確認してみてね♡"
-            },
-            6: {
-                name: "💆‍♀️ マッサージ30分券",
-                description: "俊介による30分間のマッサージ券♡\n肩こりも疲れもスッキリしちゃおう！"
-            },
-            7: {
-                name: "🍭 コンビニで好きなもの１つ",
-                description: "また好きなものを選べるよ〜♪\n2回目だからちょっと違うものにしてみる？"
-            },
-            8: {
-                name: "💇‍♀️ 美容室プレゼント券",
-                description: "美容室にいくお金と時間を俊介からプレゼント！\nさらに綺麗になってくるんだよ！"
-            },
-            9: {
-                name: "💕 俊介とチュー",
-                description: "お疲れ様でした♡\n最高のご褒美で2日間の思い出を締めくくろう！"
-            }
-        };
+// 景品データも引き継ぎOK（ここは今まで通り）
+const prizes = {
+  1: { name: "🥤 飲み物１本", description: "好きな飲み物を1本選んでね♪炭酸？紅茶？まぁどっちかでしょう！" },
+  2: { name: "🍰 デザート１つ", description: "ランチの後はデザートかな？コンビニでも良いし時間が合えばカフェでもいいね♡甘いものタイムを楽しんでね！" },
+  3: { name: "🔑 パスワード「0930」", description: "次のミッションで使う特別なパスワード♪忘れんと思うけど覚えておいてね！" },
+  4: { name: "🎬 紫音の動画解禁", description: "俊介から紫音のスペシャル動画が送られてくるよ！最後までしっかり見てね！" },
+  5: { name: "🎁 誕生日プレゼント", description: "何が入ってるかなあ♪後でゆっくり確認してみてね♡" },
+  6: { name: "💆‍♀️ マッサージ30分券", description: "俊介による30分間のマッサージ券♡肩こりも疲れもスッキリしちゃおう！" },
+  7: { name: "🍭 コンビニで好きなもの１つ", description: "また好きなものを選べるよ〜♪2回目だからちょっと違うものにしてみる？" },
+  8: { name: "💇‍♀️ 美容室プレゼント券", description: "美容室にいくお金と時間を俊介からプレゼント！さらに綺麗になってくるんだよ！" },
+  9: { name: "💕 俊介とチュー", description: "お疲れ様でした♡最高のご褒美で2日間の思い出を締めくくろう！" }
+};
 
-        // ページ読み込み時の初期化
-        window.addEventListener('load', function() {
-            const missionInfo = document.getElementById('missionInfo');
-            missionInfo.innerHTML = `ミッション${missionNumber}完了おめでとう♡<br>スクラッチで景品をゲットしよう！`;
-            
-            // 景品をセット
-            setupScratchCard();
-            
-            // スクラッチを初期化
-            initScratchCard();
-        });
+const urlParams = new URLSearchParams(window.location.search);
+const missionNumber = parseInt(urlParams.get('mission')) || 1;
 
-        // スクラッチカードをセットアップ
-        function setupScratchCard() {
-            const background = document.getElementById('scratchBackground');
-            const prize = prizes[missionNumber];
-            
-            background.innerHTML = `
-                 <div style="text-align: center; background: white; width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <div style="font-size: 32px; margin-bottom: 10px;">${prize.name.split(' ')[0]}</div>
-                    <div style="font-size: 18px; line-height: 1.3;">${prize.name.substring(2)}</div>
-                </div>
-            `;
-        }
+// 2. 画像セット＋スクラッチcanvasスタート
+window.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('prizeImg').src = missionImages[missionNumber];
+  setupScratchCanvas();
+});
 
-        // スクラッチカードを初期化
-        function initScratchCard() {
-            const canvas = document.getElementById('scratchCanvas');
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.getBoundingClientRect();
-            
-            // キャンバスサイズを設定
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            
-            // スクラッチ面を描画
-            drawScratchSurface(ctx, canvas.width, canvas.height);
-            
-            // イベントリスナーを設定
-            setupScratchEvents(canvas, ctx);
-        }
+function setupScratchCanvas() {
+  const canvas = document.getElementById('scratchCanvas');
+  const ctx = canvas.getContext('2d');
+  const wheel = document.getElementById('lotteryWheel');
+  const w = wheel.offsetWidth;
+  const h = wheel.offsetHeight;
+  canvas.width = w;
+  canvas.height = h;
 
-        // スクラッチ面を描画
-        function drawScratchSurface(ctx, width, height) {
-            // シルバーのグラデーション
-            const gradient = ctx.createLinearGradient(0, 0, width, height);
-            gradient.addColorStop(0, '#E0E0E0');
-            gradient.addColorStop(0.5, '#C0C0C0');
-            gradient.addColorStop(1, '#A0A0A0');
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, width, height);
-            
-            // テキストを描画
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 18px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('ここを削ってね♪', width/2, height/2);
-        }
-
-        // スクラッチイベントを設定
-        function setupScratchEvents(canvas, ctx) {
-            let isScratching = false;
-            let scratchedArea = 0;
-            const totalArea = canvas.width * canvas.height;
-            
-            // マウスイベント
-            canvas.addEventListener('mousedown', startScratch);
-            canvas.addEventListener('mousemove', scratch);
-            canvas.addEventListener('mouseup', stopScratch);
-            canvas.addEventListener('mouseleave', stopScratch);
-            
-            // タッチイベント
-            canvas.addEventListener('touchstart', handleTouchStart);
-            canvas.addEventListener('touchmove', handleTouchMove);
-            canvas.addEventListener('touchend', stopScratch);
-            
-            function startScratch(e) {
-                isScratching = true;
-                scratchAt(getEventPos(e));
-            }
-            
-            function scratch(e) {
-                if (!isScratching) return;
-                scratchAt(getEventPos(e));
-            }
-            
-            function stopScratch() {
-                isScratching = false;
-            }
-            
-            function handleTouchStart(e) {
-                e.preventDefault();
-                startScratch(e.touches[0]);
-            }
-            
-            function handleTouchMove(e) {
-                e.preventDefault();
-                if (isScratching) {
-                    scratchAt(getEventPos(e.touches[0]));
-                }
-            }
-            
-            function getEventPos(e) {
-                const rect = canvas.getBoundingClientRect();
-                return {
-                    x: (e.clientX || e.pageX) - rect.left,
-                    y: (e.clientY || e.pageY) - rect.top
-                };
-            }
-            
-            function scratchAt(pos) {
-    ctx.globalCompositeOperation = 'destination-out';
+  // グレーのスクラッチ面
+  const gradient = ctx.createLinearGradient(0, 0, w, h);
+  gradient.addColorStop(0, '#e0e0e0');
+  gradient.addColorStop(0.5, '#bcbcbc');
+  gradient.addColorStop(1, '#c7c7c7');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, w, h);
+  for(let i=0;i<5000;i++){
+    ctx.fillStyle = `rgba(200,200,200,${Math.random()*0.2})`;
     ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
+    ctx.arc(Math.random()*w, Math.random()*h, Math.random()*2+1, 0, Math.PI*2);
     ctx.fill();
+  }
+  ctx.fillStyle = "#888";
+  ctx.font = "bold 22px 'Zen Kurenaido', Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("ここを削ってね♪", w/2, h/2);
 
-    // ImageDataから透明ピクセルの割合を計算
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let transparentPixels = 0;
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        if (imageData.data[i + 3] === 0) { // alpha値が0
-            transparentPixels++;
-        }
+  // 削りイベント
+  let isDown = false;
+  canvas.addEventListener('mousedown', e => { isDown=true; scratch(e); });
+  canvas.addEventListener('mousemove', e => { if(isDown) scratch(e); });
+  canvas.addEventListener('mouseup', () => { isDown=false; });
+  canvas.addEventListener('mouseleave', ()=>{isDown=false;});
+  canvas.addEventListener('touchstart', e => { isDown=true; scratch(e.touches[0]); });
+  canvas.addEventListener('touchmove', e => { if(isDown) scratch(e.touches[0]); });
+  canvas.addEventListener('touchend', ()=>{isDown=false; });
+
+  function scratch(e){
+    const rect = canvas.getBoundingClientRect();
+    const x = ((e.clientX || e.pageX) - rect.left);
+    const y = ((e.clientY || e.pageY) - rect.top);
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 30, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+    checkScratchCompletion();
+  }
+
+  function checkScratchCompletion() {
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let cleared = 0;
+    for(let i=3; i<imgData.length; i+=4) {
+      if(imgData[i]===0) cleared++;
     }
-
-    const totalPixels = canvas.width * canvas.height;
-    const percent = transparentPixels / totalPixels;
-
-    if (percent > 0.8) {
-        revealAll();
+    if(cleared / (canvas.width * canvas.height) > 0.8) {
+      canvas.style.transition = "opacity 0.5s";
+      canvas.style.opacity = 0;
+      setTimeout(()=> {
+        canvas.remove();
+        showResult();  // ← 削り終わったら自動で「ご褒美」画面に！
+      },500);
     }
+  }
 }
-            
-            function revealAll() {
-                canvas.style.opacity = '0';
-                canvas.style.transition = 'opacity 0.5s ease';
-                
-                // 紙吹雪エフェクト
-                createConfetti();
-                
-                // 2秒後に結果表示
-                setTimeout(() => {
-                    showResult();
-                }, 2000);
-            }
-        }
 
-        // スクラッチ開始（不要になったけど残しておく）
-        function startLottery() {
-            // 何もしない（直接削れるため）
-        }
+// 3. showResult()は今まで通り
+function showResult() {
+  const result = document.getElementById('lotteryResult');
+  const buttons = document.getElementById('actionButtons');
+  const prizeElement = document.getElementById('resultPrize');
+  const descElement = document.getElementById('resultDescription');
 
-        // 結果表示
-        function showResult() {
-            const result = document.getElementById('lotteryResult');
-            const buttons = document.getElementById('actionButtons');
-            const prizeElement = document.getElementById('resultPrize');
-            const descElement = document.getElementById('resultDescription');
-            
-            const prize = prizes[missionNumber];
-            
-            prizeElement.textContent = prize.name;
-            descElement.textContent = prize.description;
-            
-            result.classList.add('show');
-            
-            // 1秒後にボタン表示
-            setTimeout(() => {
-                buttons.classList.add('show');
-            }, 1000);
-        }
+  const prize = prizes[missionNumber];
 
-        // ミッション一覧に戻る
-        function goToMissions() {
-            // 完了したミッション番号を渡してmission.htmlに戻る
-            window.location.href = `mission.html?completed=${missionNumber}`;
-        }
+  prizeElement.textContent = prize.name;
+  descElement.textContent = prize.description;
 
-        // 紙吹雪エフェクト
-        function createConfetti() {
-    const colors = ['#ff99cc', '#66ccff', '#ffcc66', '#cc99ff', '#99ff99'];
-    
-    for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.position = 'fixed';
-        confetti.style.top = '0';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.width = '12px';
-        confetti.style.height = '12px';
-        confetti.style.borderRadius = '50%';
-        confetti.style.pointerEvents = 'none';
-        confetti.style.zIndex = '9999';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animation = `confetti-fall ${Math.random() * 2 + 3}s ease-out`;
-        confetti.style.animationDelay = `${Math.random()}s`;
-        document.body.appendChild(confetti);
-
-        setTimeout(() => confetti.remove(), 6000);
-    }
+  result.classList.add('show');
+  setTimeout(() => {
+    buttons.classList.add('show');
+  }, 1000);
 }
     </script>
 </body>
