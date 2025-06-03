@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&display=swap" rel="stylesheet">
     <title>桃子生誕祭2DAYS - スクラッチ</title>
     <style>
-       * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -243,20 +243,27 @@
         <div class="mission-info" id="missionInfo">
             ミッション完了おめでとう♡<br>スクラッチを削って景品を確認しよう！
         </div>
+
         <div class="scratch-container">
             <img id="scratchImage" class="scratch-image" src="" alt="スクラッチカード">
+            
+            <!-- 赤枠のスクラッチエリア -->
             <div class="scratch-area scratch-red" id="scratchRed">
                 <canvas class="scratch-canvas" id="canvasRed"></canvas>
             </div>
+            
+            <!-- 青枠のスクラッチエリア -->
             <div class="scratch-area scratch-blue" id="scratchBlue">
                 <canvas class="scratch-canvas" id="canvasBlue"></canvas>
             </div>
         </div>
+
         <div class="lottery-result" id="lotteryResult">
             <div class="result-title">ご褒美ゲット✨</div>
             <div class="result-prize" id="resultPrize"></div>
             <div class="result-description" id="resultDescription"></div>
         </div>
+
         <div class="action-buttons" id="actionButtons">
             <a href="#" class="btn" onclick="goToMissions()">
                 🍌 ミッション一覧に戻る
@@ -264,10 +271,7 @@
         </div>
     </div>
 
-    <!-- サウンド -->
-    <audio id="bgm-audio" src="bgm.mp3" loop></audio>
     <audio id="scratch-audio" src="scratch.mp3" loop></audio>
-    <audio id="kansei-audio" src="kansei.mp3"></audio>
 
     <script>
         // URLパラメータからミッション番号を取得
@@ -329,56 +333,69 @@
 
         // 当たりエリアの設定
         const winningAreas = {
-            red: [2, 4, 5, 6, 8],
-            blue: [1, 3, 7, 9]
+            red: [2, 4, 5, 6, 8], // 赤枠が当たりのミッション
+            blue: [1, 3, 7, 9]    // 青枠が当たりのミッション
         };
 
+        // ページ読み込み時の初期化
         window.addEventListener('load', function() {
-            // BGM
-            const bgm = document.getElementById('bgm-audio');
-            if (bgm) {
-                bgm.volume = 0.12;
-                document.body.addEventListener('click', ()=>{ if(bgm.paused) bgm.play().catch(()=>{}); }, { once: true });
-                bgm.play().catch(()=>{});
-            }
-            // メイン
             const missionInfo = document.getElementById('missionInfo');
             missionInfo.innerHTML = `ミッション${missionNumber}完了おめでとう♡<br>スクラッチを削って景品を確認しよう！`;
+            
+            // スクラッチ画像を設定
             const scratchImage = document.getElementById('scratchImage');
             scratchImage.src = scratchImages[missionNumber];
+            
+            // 画像読み込み完了後にスクラッチを初期化
             scratchImage.onload = function() {
                 initScratchAreas();
             };
         });
 
+        // スクラッチエリアを初期化
         function initScratchAreas() {
             initScratchCanvas('canvasRed', 'red');
             initScratchCanvas('canvasBlue', 'blue');
         }
 
+        // スクラッチキャンバスを初期化
         function initScratchCanvas(canvasId, areaType) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
             const rect = canvas.getBoundingClientRect();
+            
+            // キャンバスサイズを設定
             canvas.width = rect.width;
             canvas.height = rect.height;
+            
+            // スクラッチ面を描画
             drawScratchSurface(ctx, canvas.width, canvas.height);
+            
+            // 当たり判定
             const isWinning = (areaType === 'red' && winningAreas.red.includes(missionNumber)) ||
-                              (areaType === 'blue' && winningAreas.blue.includes(missionNumber));
+                            (areaType === 'blue' && winningAreas.blue.includes(missionNumber));
+            
+            // イベントリスナーを設定
             if (isWinning) {
                 setupScratchEvents(canvas, ctx, areaType);
             } else {
+                // ハズレエリアでも削れるけど何も起きない
                 setupDummyScratchEvents(canvas, ctx);
             }
         }
 
+        // スクラッチ面を描画
         function drawScratchSurface(ctx, width, height) {
+            // キラキラシルバーのグラデーション
             const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width/2);
             gradient.addColorStop(0, '#F0F0F0');
             gradient.addColorStop(0.5, '#D0D0D0');
             gradient.addColorStop(1, '#B0B0B0');
+            
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
+            
+            // キラキラ効果
             for (let i = 0; i < 50; i++) {
                 ctx.fillStyle = 'rgba(255, 255, 255, ' + (Math.random() * 0.5) + ')';
                 ctx.beginPath();
@@ -387,6 +404,7 @@
             }
         }
 
+        // 当たりエリアのスクラッチイベント
         function setupScratchEvents(canvas, ctx, areaType) {
             let isScratching = false;
             let scratchedPixels = 0;
@@ -409,38 +427,52 @@
             function stopScratch() {
                 isScratching = false;
                 if (scratchAudio) scratchAudio.pause();
-            }
+            
             function getEventPos(e) {
                 const rect = canvas.getBoundingClientRect();
                 const x = (e.clientX || e.pageX || e.touches[0].clientX) - rect.left;
                 const y = (e.clientY || e.pageY || e.touches[0].clientY) - rect.top;
                 return { x, y };
             }
+            
             function scratchAt(pos) {
-                createScratchParticles(pos, canvas);
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = 'rgba(0,0,0,1)';
-                ctx.fill();
-                checkScratchProgress();
-            }
+    // 削りエフェクト
+    createScratchParticles(pos, canvas);
+    
+    // 削る（グラデなし・普通の円で削るだけ！）
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI); // 18pxが大きいなら12~15pxくらいでもOK
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fill();
+
+    // 削った割合をチェック
+    checkScratchProgress();
+}           
             function checkScratchProgress() {
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 let transparent = 0;
+                
                 for (let i = 3; i < imageData.data.length; i += 4) {
-                    if (imageData.data[i] < 128) transparent++;
+                    if (imageData.data[i] < 128) {
+                        transparent++;
+                    }
                 }
+                
                 const percent = transparent / (canvas.width * canvas.height);
+                
                 if (percent > threshold) {
                     revealAll(canvas, areaType);
-                    if (scratchAudio) scratchAudio.pause();
                 }
             }
+            
+            // マウスイベント
             canvas.addEventListener('mousedown', startScratch);
             canvas.addEventListener('mousemove', scratch);
             canvas.addEventListener('mouseup', stopScratch);
             canvas.addEventListener('mouseleave', stopScratch);
+            
+            // タッチイベント
             canvas.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 startScratch(e.touches[0]);
@@ -452,43 +484,48 @@
             canvas.addEventListener('touchend', stopScratch);
         }
 
+        // ハズレエリアのスクラッチイベント（削れるけど何も起きない）
         function setupDummyScratchEvents(canvas, ctx) {
             let isScratching = false;
-            const scratchAudio = document.getElementById('scratch-audio');
+            
             function startScratch(e) {
                 isScratching = true;
-                if (scratchAudio && scratchAudio.paused) {
-                    scratchAudio.currentTime = 0;
-                    scratchAudio.play().catch(()=>{});
-                }
                 scratchAt(getEventPos(e));
             }
+            
             function scratch(e) {
                 if (!isScratching) return;
                 scratchAt(getEventPos(e));
             }
+            
             function stopScratch() {
                 isScratching = false;
-                if (scratchAudio) scratchAudio.pause();
             }
+            
             function getEventPos(e) {
                 const rect = canvas.getBoundingClientRect();
                 const x = (e.clientX || e.pageX || e.touches[0].clientX) - rect.left;
                 const y = (e.clientY || e.pageY || e.touches[0].clientY) - rect.top;
                 return { x, y };
             }
+            
             function scratchAt(pos) {
-                createScratchParticles(pos, canvas);
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = 'rgba(0,0,0,1)';
-                ctx.fill();
-            }
+    // 削りエフェクト
+    createScratchParticles(pos, canvas);
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI);  // ←半径揃える
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fill();
+}
+            
+            // イベント設定
             canvas.addEventListener('mousedown', startScratch);
             canvas.addEventListener('mousemove', scratch);
             canvas.addEventListener('mouseup', stopScratch);
             canvas.addEventListener('mouseleave', stopScratch);
+            
             canvas.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 startScratch(e.touches[0]);
@@ -500,52 +537,65 @@
             canvas.addEventListener('touchend', stopScratch);
         }
 
+        // 削りカスのパーティクル効果
         function createScratchParticles(pos, canvas) {
             const rect = canvas.getBoundingClientRect();
+            
             for (let i = 0; i < 5; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'scratch-particle';
                 particle.style.left = (rect.left + pos.x) + 'px';
                 particle.style.top = (rect.top + pos.y) + 'px';
+                
+                // ランダムな方向に飛ばす
                 const angle = Math.random() * Math.PI * 2;
                 const distance = 20 + Math.random() * 30;
                 particle.style.setProperty('--x', Math.cos(angle) * distance + 'px');
                 particle.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+                
                 document.body.appendChild(particle);
+                
                 setTimeout(() => particle.remove(), 1000);
             }
         }
 
+        // 全体を表示
         function revealAll(canvas, areaType) {
             canvas.style.opacity = '0';
             canvas.style.transition = 'opacity 0.5s ease';
+            
+            // 紙吹雪
             createConfetti();
+            
+            // 結果表示
             setTimeout(() => {
                 showResult();
             }, 1500);
         }
 
+        // 結果表示
         function showResult() {
-            const kanseiAudio = document.getElementById('kansei-audio');
-            if (kanseiAudio) {
-                kanseiAudio.currentTime = 0;
-                kanseiAudio.play().catch(()=>{});
-            }
             const result = document.getElementById('lotteryResult');
             const buttons = document.getElementById('actionButtons');
             const prizeElement = document.getElementById('resultPrize');
             const descElement = document.getElementById('resultDescription');
+            
             const prize = prizes[missionNumber];
+            
             prizeElement.textContent = prize.name;
             descElement.innerHTML = prize.description.replace(/\n/g, '<br>');
+            
             result.classList.add('show');
+            
             setTimeout(() => {
                 buttons.classList.add('show');
             }, 1000);
         }
 
+        // 紙吹雪エフェクト
         function createConfetti() {
             const colors = ['#ff99cc', '#ffb3d9', '#ff66b2', '#ff3399', '#ff0080'];
+            
             for (let i = 0; i < 60; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
@@ -556,11 +606,14 @@
                 confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
                 confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
                 confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                
                 document.body.appendChild(confetti);
+                
                 setTimeout(() => confetti.remove(), 4000);
             }
         }
 
+        // ミッション一覧に戻る
         function goToMissions() {
             window.location.href = `mission.html?completed=${missionNumber}`;
         }
