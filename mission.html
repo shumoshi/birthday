@@ -11,35 +11,40 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family:  'Zen+Kurenaido','Comic Sans MS', cursive, sans-serif;
+            font-family:  'Zen Kurenaido','Comic Sans MS', cursive, sans-serif;
             min-height: 100vh;
-            background-image: url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center top;
+             background-image: url('https://i.ibb.co/bg0hB8Pm/4-F28-FE07-17-F3-4-CF0-9-DF2-7079-BF736-A5-E.png');
+             background-size: cover;           /* 画面全体にフィット */
+             background-repeat: no-repeat;      /* 繰り返さない */
+             background-position: center top;   
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
+
         .header {
-            text-align: center;
-            margin-bottom: 30px;
-            background: rgba(255, 240, 248, 0.4);
-            padding: 25px;
-            border-radius: 20px;
-            border: 3px solid #ffb3d9;
-            box-shadow: 0 10px 30px rgba(255,182,193,0.3);
-        }
+    text-align: center;
+    margin-bottom: 30px;
+    background: rgba(255, 240, 248, 0.4); /* ←ここ！0.4に透過 */
+    padding: 25px;
+    border-radius: 20px;
+    border: 3px solid #ffb3d9;
+    box-shadow: 0 10px 30px rgba(255,182,193,0.3);
+}
+
         .header h1 {
             color: #d63384;
             font-size: 28px;
             margin-bottom: 10px;
         }
+
         .progress-bar {
             background: #ffe6f2;
             height: 20px;
@@ -48,6 +53,7 @@
             margin: 20px 0;
             border: 2px solid #ffb3d9;
         }
+
         .progress-fill {
             background: linear-gradient(45deg, #ff99cc, #d63384);
             height: 100%;
@@ -60,20 +66,23 @@
             font-weight: bold;
             font-size: 12px;
         }
+
         .photo-gallery {
-            background: rgba(255, 240, 248, 0.4);
-            border: 3px solid #ffb3d9;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 25px rgba(255,182,193,0.3);
-            display: none;
-        }
+    background: rgba(255, 240, 248, 0.4); /* ←ここ透過追加 */
+    border: 3px solid #ffb3d9;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(255,182,193,0.3);
+    display: none;
+}
+
         .photo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
         }
+
         .uploaded-photo {
             width: 100%;
             height: 150px;
@@ -83,62 +92,63 @@
             box-shadow: 0 5px 15px rgba(255,182,193,0.3);
             transition: transform 0.3s ease;
         }
+
         .uploaded-photo:hover {
             transform: scale(1.05);
         }
+
         .mission-grid {
             display: grid;
             gap: 20px;
             margin-bottom: 30px;
         }
+
         .mission-card {
-            background: linear-gradient(135deg, rgba(255, 240, 248, 0.4), rgba(255, 230, 242, 0.4));
-            border: 5px double #ff99cc;
-            border-radius: 25px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.5);
-            position: relative;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
-        }
-        .mission-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(255, 182, 193, 0.4);
-        }
-        .mission-card .mission-title {
-            font-family: 'Comic Sans MS', cursive;
-            font-size: 20px;
-            color: #ff66a3;
-            text-shadow: 1px 1px #fff0f8;
-        }
+    background: linear-gradient(135deg, rgba(255, 240, 248, 0.4), rgba(255, 230, 242, 0.4));
+    border: 5px double #ff99cc;
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(255, 182, 193, 0.5);
+    position: relative;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+
+.mission-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(255, 182, 193, 0.4);
+}
+
+.mission-card .mission-title {
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 20px;
+    color: #ff66a3;
+    text-shadow: 1px 1px #fff0f8;
+}
+        
         .mission-card.completed::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://i.ibb.co/rRY8jxdx/IMG-0344.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: 2;
-            opacity: 0.9;
-        }
-        @keyframes stampPop {
-            0%   { transform: scale(1);}
-            50%  { transform: scale(1.22);}
-            100% { transform: scale(1);}
-        }
-        .mission-card.completed.stamp-pop {
-            animation: stampPop 0.6s cubic-bezier(.6,1.7,.9,.8) 1;
-        }
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://i.ibb.co/rRY8jxdx/IMG-0344.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.9;
+}
+
         .mission-header {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
         }
+
         .mission-number {
             background: linear-gradient(45deg, #ff99cc, #d63384);
             color: white;
@@ -152,23 +162,28 @@
             margin-right: 15px;
             font-size: 18px;
         }
+
         .mission-title {
             color: #d63384;
             font-size: 18px;
             font-weight: bold;
             flex: 1;
         }
+
         .mission-status {
             font-size: 24px;
         }
+
         .mission-description {
             color: #6f42c1;
             margin: 15px 0;
             line-height: 1.5;
         }
+
         .mission-action {
             margin-top: 15px;
         }
+
         .action-button {
             background: linear-gradient(45deg, #ff99cc, #ffb3d9);
             color: white;
@@ -182,16 +197,19 @@
             box-shadow: 0 5px 15px rgba(255,182,193,0.4);
             width: 100%;
         }
+
         .action-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(255,182,193,0.6);
         }
+
         .action-button:disabled {
             background: #cccccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
+
         .input-field {
             width: 100%;
             padding: 12px;
@@ -201,9 +219,11 @@
             margin: 10px 0;
             background: #fff8fc;
         }
+
         .file-input {
             display: none;
         }
+
         .file-label {
             display: block;
             background: linear-gradient(45deg, #e6f3ff, #cce6ff);
@@ -216,9 +236,11 @@
             margin: 10px 0;
             transition: all 0.3s ease;
         }
+
         .file-label:hover {
             background: linear-gradient(45deg, #cce6ff, #b3d9ff);
         }
+
         .back-button {
             background: linear-gradient(45deg, #6f42c1, #8b5cf6);
             color: white;
@@ -231,10 +253,12 @@
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(111,66,193,0.3);
         }
+
         .back-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(111,66,193,0.4);
         }
+
         .reset-button {
             background: linear-gradient(45deg, #dc3545, #e74c3c);
             color: white;
@@ -250,10 +274,12 @@
             right: 20px;
             z-index: 100;
         }
+
         .reset-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(220,53,69,0.4);
         }
+
         .completion-message {
             text-align: center;
             padding: 20px;
@@ -263,26 +289,34 @@
             margin: 20px 0;
             display: none;
         }
+
         .completion-message.show {
             display: block;
         }
+
         .janken-buttons {
             display: flex;
             gap: 10px;
         }
+
         .janken-buttons .action-button {
             width: 50%;
         }
+
         .lose-button {
             background: linear-gradient(45deg, #dc3545, #e74c3c) !important;
         }
+
+        /* レスポンシブ対応 */
         @media (max-width: 768px) {
             .container {
                 padding: 0 10px;
             }
+            
             .mission-card {
                 padding: 20px;
             }
+            
             .header h1 {
                 font-size: 24px;
             }
@@ -304,6 +338,7 @@
         <div class="photo-gallery" id="photoGallery">
             <h3 style="color: #d63384; margin-bottom: 15px; text-align: center;">📸 思い出フォト 📸</h3>
             <div class="photo-grid" id="photoGrid">
+                <!-- アップロードされた写真がここに表示される -->
             </div>
         </div>
 
@@ -312,13 +347,15 @@
             <p>おかえり＾＾<br>楽しんでもらえたかな？✨</p>
         </div>
 
-        <div class="mission-grid" id="missionGrid"></div>
+        <div class="mission-grid" id="missionGrid">
+            <!-- ミッションが動的に生成される -->
+        </div>
+
         <button class="reset-button" onclick="resetAll()">🔄 リセット</button>
     </div>
 
-    <!-- サウンド -->
+     <!-- サウンド -->
     <audio id="bgm-audio" src="bgm.mp3" loop></audio>
-    <audio id="clear-audio" src="clear.mp3"></audio>
 
     <script>
         let missions = [
@@ -332,9 +369,10 @@
             { title: "最初に俊介が歌った歌", desc: "最初に俊介が歌った歌のタイトルを当ててね♪", emoji: "🎵", type: "song" },
             { title: "帰宅記念写真", desc: "家に無事に到着したら記念写真を撮ってアップロードしてね♡", emoji: "🏠", type: "photo" }
         ];
+
         let completed = JSON.parse(localStorage.getItem('completed') || '[]');
 
-        function init() {
+                function init() {
             // BGM初期化（iOS対策でクリック以降再生も自動セット）
             const bgm = document.getElementById('bgm-audio');
             if (bgm) {
@@ -361,10 +399,15 @@
         function showMissions() {
             const grid = document.getElementById('missionGrid');
             grid.innerHTML = '';
+            
             const next = completed.length + 1;
+            
+            // 完了済みを表示
             completed.sort((a,b) => a-b).forEach(num => {
                 addCard(num, missions[num-1], true);
             });
+
+            // 次のミッションを表示
             if (next <= missions.length) {
                 addCard(next, missions[next-1], false);
             }
@@ -374,6 +417,7 @@
             const grid = document.getElementById('missionGrid');
             const card = document.createElement('div');
             card.className = `mission-card ${done ? 'completed' : ''}`;
+            
             let actionHtml = '';
             if (done) {
                 actionHtml = '<button class="action-button" disabled>✨ 完了済み ✨</button>';
@@ -423,6 +467,7 @@
                         break;
                 }
             }
+            
             card.innerHTML = `
                 <div class="mission-header">
                     <div class="mission-number">${num}</div>
@@ -432,27 +477,12 @@
                 <div class="mission-description">${mission.desc}</div>
                 <div class="mission-action">${actionHtml}</div>
             `;
+            
             grid.appendChild(card);
         }
 
         function completeMission(num) {
-            // クリア音＆スタンプ演出
-            try {
-                const audio = document.getElementById('clear-audio');
-                audio.currentTime = 0;
-                audio.play().catch(()=>{});
-            } catch(e){}
-            setTimeout(() => {
-                const grid = document.getElementById('missionGrid');
-                const cards = grid.querySelectorAll('.mission-card');
-                cards.forEach(card => {
-                    if (!card.classList.contains('completed')) {
-                        card.classList.add('stamp-pop');
-                        setTimeout(()=>{ card.classList.remove('stamp-pop'); }, 700);
-                    }
-                });
-            }, 10);
-
+            console.log('ミッション完了:', num);
             completed.push(num);
             localStorage.setItem('completed', JSON.stringify(completed));
             window.location.href = `draw.html?mission=${num}`;
@@ -470,30 +500,42 @@
 
         function uploadPhoto(num) {
             const input = document.getElementById(`photo${num}`);
+            
             if (input.files.length > 0) {
                 const file = input.files[0];
+                
+                // ファイルサイズチェック（10MB制限）
                 if (file.size > 10 * 1024 * 1024) {
                     alert('写真のファイルサイズが大きすぎます。10MB以下の写真を選択してください。');
                     return;
                 }
+                
+                // 対応形式チェック
                 if (!file.type.startsWith('image/')) {
                     alert('画像ファイルを選択してください。');
                     return;
                 }
+                
+                // 画像を圧縮してから保存
                 compressAndSaveImage(file, num);
             } else {
                 alert('写真を選択してください！');
             }
         }
 
+        // 画像圧縮機能
         function compressAndSaveImage(file, missionNum) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             const img = new Image();
+            
             img.onload = function() {
+                // 最大サイズを800x600に制限
                 const maxWidth = 800;
                 const maxHeight = 600;
                 let { width, height } = img;
+                
+                // アスペクト比を保持してリサイズ
                 if (width > height) {
                     if (width > maxWidth) {
                         height = (height * maxWidth) / width;
@@ -505,10 +547,16 @@
                         height = maxHeight;
                     }
                 }
+                
                 canvas.width = width;
                 canvas.height = height;
+                
+                // 画像を描画
                 ctx.drawImage(img, 0, 0, width, height);
+                
+                // 圧縮した画像をBase64に変換（品質70%）
                 const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+                
                 try {
                     let photos = JSON.parse(localStorage.getItem('photos') || '[]');
                     photos.push(compressedData);
@@ -524,9 +572,12 @@
                     }
                 }
             };
+            
             img.onerror = function() {
                 alert('画像の読み込みに失敗しました。');
             };
+            
+            // FileReaderで画像を読み込み
             const reader = new FileReader();
             reader.onload = function(e) {
                 img.src = e.target.result;
@@ -557,9 +608,12 @@
         function janken(num, win) {
             completed.push(num);
             localStorage.setItem('completed', JSON.stringify(completed));
+            
             if (win) {
+                // 勝った場合はスクラッチページへ
                 window.location.href = `draw.html?mission=${num}`;
             } else {
+                // 負けた場合は次のミッションを直接表示
                 showMissions();
                 showProgress();
             }
@@ -578,6 +632,7 @@
         function showProgress() {
             const fill = document.getElementById('progressFill');
             const count = completed.length;
+            
             if (count === 0) {
                 fill.textContent = "スタート！";
                 fill.style.width = "10%";
@@ -595,9 +650,11 @@
             const photos = JSON.parse(localStorage.getItem('photos') || '[]');
             const gallery = document.getElementById('photoGallery');
             const grid = document.getElementById('photoGrid');
+            
             if (photos.length > 0) {
                 gallery.style.display = 'block';
                 grid.innerHTML = '';
+                
                 photos.forEach((photo, index) => {
                     const img = document.createElement('img');
                     img.src = photo;
