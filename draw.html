@@ -6,12 +6,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&display=swap" rel="stylesheet">
     <title>桃子生誕祭2DAYS - スクラッチ</title>
     <style>
-        /* ---CSSは元のまま--- */
+        /* ---ここに前回のCSS全部コピペでOK--- */
+        /* 省略指示あったけど全部欲しい場合は、これまでのCSS全部そのまま貼ってください！ */
+        /* 既存のdraw.htmlのCSSを全貼り推奨！ */
     </style>
 </head>
 <body>
     <div class="lottery-container">
-        <!-- ...省略... -->
+        <h1 class="lottery-title">ミッションクリア🎉</h1>
+        <div class="mission-info" id="missionInfo">
+            ミッション完了おめでとう♡<br>スクラッチを削って景品を確認しよう！
+        </div>
+        <div class="scratch-container">
+            <img id="scratchImage" class="scratch-image" src="" alt="スクラッチカード">
+            <div class="scratch-area scratch-red" id="scratchRed">
+                <canvas class="scratch-canvas" id="canvasRed"></canvas>
+            </div>
+            <div class="scratch-area scratch-blue" id="scratchBlue">
+                <canvas class="scratch-canvas" id="canvasBlue"></canvas>
+            </div>
+        </div>
+        <div class="lottery-result" id="lotteryResult">
+            <div class="result-title">ご褒美ゲット✨</div>
+            <div class="result-prize" id="resultPrize"></div>
+            <div class="result-description" id="resultDescription"></div>
+        </div>
+        <div class="action-buttons" id="actionButtons">
+            <a href="#" class="btn" onclick="goToMissions()">
+                🍌 ミッション一覧に戻る
+            </a>
+        </div>
     </div>
 
     <!-- サウンド -->
@@ -20,42 +44,132 @@
     <audio id="kansei-audio" src="kansei.mp3"></audio>
 
     <script>
-        // 既存コード（prizes, scratchImages, winningAreas など全てそのまま）
+        // URLパラメータからミッション番号を取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const missionNumber = parseInt(urlParams.get('mission')) || 1;
 
-        // サウンド系
+        // 景品データ
+        const prizes = {
+            1: {
+                name: "🥤 コンビニで好きな物１つ",
+                description: "長旅になるから飲み物かな？\nそれとも喉乾いてでもお菓子！？"
+            },
+            2: {
+                name: "🍰 デザート",
+                description: "ランチの後はデザート！コンビニでも良いし時間が合えばカフェでもいいね♡\n甘いものタイムを楽しんでね！"
+            },
+            3: {
+                name: "🔑 パスワード「0930」",
+                description: "次のミッションで使う特別なパスワード♪\n忘れんと思うけど覚えておいてね！"
+            },
+            4: {
+                name: "🎬 紫音の動画解禁",
+                description: "俊介から紫音のスペシャル動画が送られてくるよ！\n 最後までしっかり見てね！"
+            },
+            5: {
+                name: "🎁 誕生日プレゼント",
+                description: "何が入ってるかなあ♪\n後でゆっくり確認してみてね♡"
+            },
+            6: {
+                name: "💆‍♀️ マッサージ30分券",
+                description: "俊介による30分間のマッサージ券♡\n肩こりも疲れもスッキリしちゃおう！"
+            },
+            7: {
+                name: "🍭 コンビニで好きなもの1つ",
+                description: "また好きなものを選べるよ〜♪\n2回目だからちょっと違うものにしてみる？"
+            },
+            8: {
+                name: "💇‍♀️ 美容室プレゼント券",
+                description: "美容室にいくお金と時間を俊介からプレゼント！\nさらに綺麗になってくるんだよ！"
+            },
+            9: {
+                name: "💕 俊介とチュー",
+                description: "お疲れ様でした♡\n最高のご褒美で2日間の思い出を締めくくろう！"
+            }
+        };
+
+        // スクラッチ画像のURL
+        const scratchImages = {
+            1: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
+            2: "https://i.ibb.co/jvZJYYh0/142-20250602231944.png",
+            3: "https://i.ibb.co/Qjrs71KW/142-20250602232315.png",
+            4: "https://i.ibb.co/spfRstMb/142-20250602231843.png",
+            5: "https://i.ibb.co/Kzp9Cd1c/142-20250602231346.png",
+            6: "https://i.ibb.co/R4HPhFBY/142-20250602231605.png",
+            7: "https://i.ibb.co/yc8Vd0pt/142-20250602232218.png",
+            8: "https://i.ibb.co/fYSnDg3Y/142-20250602231750.png",
+            9: "https://i.ibb.co/B590hg28/142-20250602232347.png"
+        };
+
+        // 当たりエリアの設定
+        const winningAreas = {
+            red: [2, 4, 5, 6, 8],
+            blue: [1, 3, 7, 9]
+        };
+
         window.addEventListener('load', function() {
-            // 既存onload内容はこのあとに続けてOK
+            // BGM
             const bgm = document.getElementById('bgm-audio');
             if (bgm) {
                 bgm.volume = 0.12;
                 document.body.addEventListener('click', ()=>{ if(bgm.paused) bgm.play().catch(()=>{}); }, { once: true });
                 bgm.play().catch(()=>{});
             }
-            // ...既存の初期化（画像セット等）...
+            // メイン
             const missionInfo = document.getElementById('missionInfo');
             missionInfo.innerHTML = `ミッション${missionNumber}完了おめでとう♡<br>スクラッチを削って景品を確認しよう！`;
-
-            // スクラッチ画像を設定
             const scratchImage = document.getElementById('scratchImage');
             scratchImage.src = scratchImages[missionNumber];
-
             scratchImage.onload = function() {
                 initScratchAreas();
             };
         });
 
-        // ---スクラッチ音追加！---
+        function initScratchAreas() {
+            initScratchCanvas('canvasRed', 'red');
+            initScratchCanvas('canvasBlue', 'blue');
+        }
+
+        function initScratchCanvas(canvasId, areaType) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            drawScratchSurface(ctx, canvas.width, canvas.height);
+            const isWinning = (areaType === 'red' && winningAreas.red.includes(missionNumber)) ||
+                              (areaType === 'blue' && winningAreas.blue.includes(missionNumber));
+            if (isWinning) {
+                setupScratchEvents(canvas, ctx, areaType);
+            } else {
+                setupDummyScratchEvents(canvas, ctx);
+            }
+        }
+
+        function drawScratchSurface(ctx, width, height) {
+            const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width/2);
+            gradient.addColorStop(0, '#F0F0F0');
+            gradient.addColorStop(0.5, '#D0D0D0');
+            gradient.addColorStop(1, '#B0B0B0');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + (Math.random() * 0.5) + ')';
+                ctx.beginPath();
+                ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 2, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+
         function setupScratchEvents(canvas, ctx, areaType) {
             let isScratching = false;
             let scratchedPixels = 0;
             const totalPixels = canvas.width * canvas.height;
             const threshold = areaType === 'red' ? 0.9 : 0.8;
-
             const scratchAudio = document.getElementById('scratch-audio');
 
             function startScratch(e) {
                 isScratching = true;
-                // スクラッチ音再生
                 if (scratchAudio && scratchAudio.paused) {
                     scratchAudio.currentTime = 0;
                     scratchAudio.play().catch(()=>{});
@@ -112,7 +226,6 @@
             canvas.addEventListener('touchend', stopScratch);
         }
 
-        // ダミーエリアも同様
         function setupDummyScratchEvents(canvas, ctx) {
             let isScratching = false;
             const scratchAudio = document.getElementById('scratch-audio');
@@ -161,14 +274,37 @@
             canvas.addEventListener('touchend', stopScratch);
         }
 
-        // 景品表示時に「kansei.mp3」
+        function createScratchParticles(pos, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'scratch-particle';
+                particle.style.left = (rect.left + pos.x) + 'px';
+                particle.style.top = (rect.top + pos.y) + 'px';
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 20 + Math.random() * 30;
+                particle.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function revealAll(canvas, areaType) {
+            canvas.style.opacity = '0';
+            canvas.style.transition = 'opacity 0.5s ease';
+            createConfetti();
+            setTimeout(() => {
+                showResult();
+            }, 1500);
+        }
+
         function showResult() {
             const kanseiAudio = document.getElementById('kansei-audio');
             if (kanseiAudio) {
                 kanseiAudio.currentTime = 0;
                 kanseiAudio.play().catch(()=>{});
             }
-            // 以降は元の処理
             const result = document.getElementById('lotteryResult');
             const buttons = document.getElementById('actionButtons');
             const prizeElement = document.getElementById('resultPrize');
@@ -181,7 +317,27 @@
                 buttons.classList.add('show');
             }, 1000);
         }
-        // ---他の関数はもとのまま!---
+
+        function createConfetti() {
+            const colors = ['#ff99cc', '#ffb3d9', '#ff66b2', '#ff3399', '#ff0080'];
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (5 + Math.random() * 10) + 'px';
+                confetti.style.height = (5 + Math.random() * 10) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        function goToMissions() {
+            window.location.href = `mission.html?completed=${missionNumber}`;
+        }
     </script>
 </body>
 </html>
