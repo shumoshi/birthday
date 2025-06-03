@@ -271,24 +271,10 @@
         </div>
     </div>
 
-    <!-- サウンド -->
-<audio id="scratch-audio" src="scratch.mp3" loop></audio>
-
     <script>
-        // グローバル変数として音声要素を定義
-let scratchAudio;
-
-// ページ読み込み時の初期化に追加
-window.addEventListener('load', function() {
-
         // URLパラメータからミッション番号を取得
         const urlParams = new URLSearchParams(window.location.search);
         const missionNumber = parseInt(urlParams.get('mission')) || 1;
-
-    // 音声要素を取得
-    scratchAudio = document.getElementById('scratch-audio');
-    scratchAudio.volume = 0.5; // 音量調整（必要に応じて）
-});
 
         // 景品データ
         const prizes = {
@@ -357,10 +343,6 @@ window.addEventListener('load', function() {
             // スクラッチ画像を設定
             const scratchImage = document.getElementById('scratchImage');
             scratchImage.src = scratchImages[missionNumber];
-
-            // 音声要素を取得（←これを追加）
-            scratchAudio = document.getElementById('scratch-audio');
-            scratchAudio.volume = 0.5;
             
             // 画像読み込み完了後にスクラッチを初期化
             scratchImage.onload = function() {
@@ -431,10 +413,6 @@ window.addEventListener('load', function() {
             function startScratch(e) {
                 isScratching = true;
                 scratchAt(getEventPos(e));
-
-                if (scratchAudio) {
-                    scratchAudio.play().catch(() => {});
-                }
             }
             
             function scratch(e) {
@@ -444,11 +422,6 @@ window.addEventListener('load', function() {
             
             function stopScratch() {
                 isScratching = false;
-
-                if (scratchAudio) {
-                    scratchAudio.pause();
-                    scratchAudio.currentTime = 0;
-                }
             }
             
             function getEventPos(e) {
@@ -514,10 +487,6 @@ window.addEventListener('load', function() {
             function startScratch(e) {
                 isScratching = true;
                 scratchAt(getEventPos(e));
-
-                if (scratchAudio) {
-                    scratchAudio.play().catch(() => {});
-                }
             }
             
             function scratch(e) {
@@ -527,11 +496,6 @@ window.addEventListener('load', function() {
             
             function stopScratch() {
                 isScratching = false;
-
-                if (scratchAudio) {
-                    scratchAudio.pause();
-                    scratchAudio.currentTime = 0;
-                }
             }
             
             function getEventPos(e) {
@@ -593,12 +557,6 @@ window.addEventListener('load', function() {
 
         // 全体を表示
         function revealAll(canvas, areaType) {
-
-             if (scratchAudio) {
-                scratchAudio.pause();
-                scratchAudio.currentTime = 0;
-            }
-            
             canvas.style.opacity = '0';
             canvas.style.transition = 'opacity 0.5s ease';
             
