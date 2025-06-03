@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 手書き風フォント追加 -->
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&family=Sawarabi+Mincho&display=swap" rel="stylesheet">
     <title>桃子生誕祭2DAYS</title>
     <style>
@@ -21,7 +22,9 @@
             background-repeat: no-repeat;
             background-position: center top;
         }
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box; /* ★全部に効かせる */
+        }
         .password-screen, .container {
             background: linear-gradient(135deg, #fff0f8, #ffe6f2);
             border-radius: 30px;
@@ -35,7 +38,7 @@
         .password-title { color: #d63384; font-size: 28px; font-weight: bold; margin-bottom: 20px; }
         .password-message { color: #6f42c1; font-size: 16px; margin-bottom: 30px; line-height: 1.6; }
         .password-input {
-            width: calc(100% - 6px);
+            width: calc(100% - 6px); /* ★枠分の幅を調整して、絶対にはみ出さない */
             padding: 15px;
             border: 3px solid #ffb3d9;
             border-radius: 15px;
@@ -44,7 +47,7 @@
             background: #fff8fc;
             text-align: center;
             outline: none;
-            box-sizing: border-box;
+            box-sizing: border-box; /* ★ダブルで安心！ */
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -57,9 +60,21 @@
             box-shadow: 0 8px 20px rgba(255,182,193,0.4);
         }
         .password-button:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255,182,193,0.6); }
-        .main-content { display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
+        .main-content {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
         .main-content.show { display: flex; }
-        .letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .letter-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .letter-box {
             background: #fff6fa;
             border-radius: 24px;
@@ -75,7 +90,12 @@
             line-height: 1.9;
             letter-spacing: 0.02em;
         }
-        .start-button-area { width: 100%; display: flex; justify-content: center; margin-top: 32px; }
+        .start-button-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 32px; /* ★ボックス下にスペース */
+        }
         .start-button {
             background: linear-gradient(45deg, #ff99cc, #ffb3d9);
             color: white;
@@ -90,6 +110,7 @@
         }
         .start-button:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255,182,193,0.6); }
         .decoration { font-size: 48px; margin: 20px 0; }
+
         @media (max-width: 768px) {
             .password-screen, .letter-box { padding: 30px 10px; width: 95%; }
             .password-title { font-size: 22px; }
@@ -108,7 +129,7 @@
         </div>
         <input type="password" class="password-input" id="passwordInput" placeholder="パスワードを入力" maxlength="4">
         <br>
-        <button class="password-button" id="enterButton">
+        <button class="password-button" onclick="checkPassword()">
             ✨ 入場する ✨
         </button>
     </div>
@@ -116,7 +137,9 @@
     <!-- メインコンテンツ（手紙演出） -->
     <div class="main-content" id="mainContent">
         <div class="letter-area">
-            <div class="letter-box" id="letterBox"></div>
+            <div class="letter-box" id="letterBox">
+                <!-- アニメーションで文字が書かれていく -->
+            </div>
             <div class="start-button-area" id="startButtonArea" style="display:none;">
                 <a href="mission.html" class="start-button" id="startButton">
                     ✨ ミッションスタート！ ✨
@@ -126,9 +149,7 @@
     </div>
 
     <!-- サウンド -->
-    <audio id="key-audio" src="key.mp3"></audio>
     <audio id="letter-audio" src="letter2.mp3"></audio>
-    <audio id="missionstart-audio" src="missionstart.mp3"></audio>
 
     <script>
         // 手紙の本文
@@ -139,9 +160,6 @@
             const input = document.getElementById('passwordInput');
             const passwordScreen = document.getElementById('passwordScreen');
             const mainContent = document.getElementById('mainContent');
-            // 音
-            document.getElementById('key-audio').currentTime = 0;
-            document.getElementById('key-audio').play().catch(()=>{});
 
             if (input.value === '0625') {
                 passwordScreen.style.display = 'none';
@@ -154,12 +172,6 @@
                 input.focus();
             }
         }
-
-        // ボタン押下時
-        document.getElementById('enterButton').addEventListener('click', function(e){
-            e.preventDefault();
-            checkPassword();
-        });
 
         // Enterキーでも認証
         document.getElementById('passwordInput').addEventListener('keypress', function(e) {
@@ -201,35 +213,13 @@
                         box.innerHTML += char;
                     }
                     i++;
-                    setTimeout(typeWriter, 60);
+                    setTimeout(typeWriter, 60); // 速度調整
                 } else {
-                    letterAudio.pause();
-                    letterAudio.currentTime = 0;
                     startBtnArea.style.display = 'flex';
-                    // ミッションスタート音は「startButton」クリック時
                 }
             }
             typeWriter();
         }
-
-        // ミッションスタートボタンの音
-        function setupMissionStartAudio() {
-            const btn = document.getElementById('startButton');
-            if(btn && !btn.dataset.soundSet){
-                btn.dataset.soundSet = "1";
-                btn.addEventListener('click', function(e){
-                    document.getElementById('missionstart-audio').currentTime = 0;
-                    document.getElementById('missionstart-audio').play().catch(()=>{});
-                });
-            }
-        }
-        // 毎回アニメ完了ごとに再バインド
-        // （ボタン表示→DOM更新時に必要）
-        new MutationObserver(setupMissionStartAudio).observe(
-            document.getElementById('startButtonArea'),
-            { childList: true, subtree: true }
-        );
-
     </script>
 </body>
 </html>
