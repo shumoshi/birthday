@@ -238,6 +238,11 @@
     </style>
 </head>
 <body>
+    <!-- 音声ファイルを事前読み込み -->
+    <audio id="scratchSound" preload="auto" loop>
+        <source src="scratch.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="lottery-container">
         <h1 class="lottery-title">ミッションクリア🎉</h1>
         <div class="mission-info" id="missionInfo">
@@ -275,6 +280,45 @@
         // URLパラメータからミッション番号を取得
         const urlParams = new URLSearchParams(window.location.search);
         const missionNumber = parseInt(urlParams.get('mission')) || 1;
+
+        // 音声管理
+        const scratchAudio = document.getElementById('scratchSound');
+        let isAudioPlaying = false;
+
+        // 音声開始
+        function startScratchSound() {
+            if (!isAudioPlaying) {
+                scratchAudio.currentTime = 0; // 最初から再生
+                scratchAudio.play().catch(e => {
+                    console.log('音声再生に失敗:', e);
+                });
+                isAudioPlaying = true;
+            }
+        }
+
+        // 音声停止
+        function stopScratchSound() {
+            if (isAudioPlaying) {
+                scratchAudio.pause();
+                isAudioPlaying = false;
+            }
+        }
+
+        // 音声フェードアウト（なめらかに停止）
+        function fadeOutScratchSound() {
+            if (isAudioPlaying) {
+                const fadeInterval = setInterval(() => {
+                    if (scratchAudio.volume > 0.1) {
+                        scratchAudio.volume -= 0.1;
+                    } else {
+                        scratchAudio.pause();
+                        scratchAudio.volume = 1.0; // 音量を元に戻す
+                        isAudioPlaying = false;
+                        clearInterval(fadeInterval);
+                    }
+                }, 50);
+            }
+        }
 
         // 景品データ
         const prizes = {
@@ -412,6 +456,7 @@
             // イベントハンドラー
             function startScratch(e) {
                 isScratching = true;
+                startScratchSound(); // 音声開始
                 scratchAt(getEventPos(e));
             }
             
@@ -422,6 +467,7 @@
             
             function stopScratch() {
                 isScratching = false;
+                fadeOutScratchSound(); // 音声をフェードアウト
             }
             
             function getEventPos(e) {
@@ -432,19 +478,20 @@
             }
             
             function scratchAt(pos) {
-    // 削りエフェクト
-    createScratchParticles(pos, canvas);
-    
-    // 削る（グラデなし・普通の円で削るだけ！）
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI); // 18pxが大きいなら12~15pxくらいでもOK
-    ctx.fillStyle = 'rgba(0,0,0,1)';
-    ctx.fill();
+                // 削りエフェクト
+                createScratchParticles(pos, canvas);
+                
+                // 削る（グラデなし・普通の円で削るだけ！）
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI);
+                ctx.fillStyle = 'rgba(0,0,0,1)';
+                ctx.fill();
 
-    // 削った割合をチェック
-    checkScratchProgress();
-}           
+                // 削った割合をチェック
+                checkScratchProgress();
+            }           
+            
             function checkScratchProgress() {
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 let transparent = 0;
@@ -486,6 +533,7 @@
             
             function startScratch(e) {
                 isScratching = true;
+                startScratchSound(); // ハズレエリアでも音は出す
                 scratchAt(getEventPos(e));
             }
             
@@ -496,6 +544,7 @@
             
             function stopScratch() {
                 isScratching = false;
+                fadeOutScratchSound(); // 音声をフェードアウト
             }
             
             function getEventPos(e) {
@@ -506,15 +555,15 @@
             }
             
             function scratchAt(pos) {
-    // 削りエフェクト
-    createScratchParticles(pos, canvas);
+                // 削りエフェクト
+                createScratchParticles(pos, canvas);
 
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI);  // ←半径揃える
-    ctx.fillStyle = 'rgba(0,0,0,1)';
-    ctx.fill();
-}
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 4, 0, 2 * Math.PI);
+                ctx.fillStyle = 'rgba(0,0,0,1)';
+                ctx.fill();
+            }
             
             // イベント設定
             canvas.addEventListener('mousedown', startScratch);
@@ -557,6 +606,7 @@
 
         // 全体を表示
         function revealAll(canvas, areaType) {
+            stopScratchSound(); // 完了時は音声停止
             canvas.style.opacity = '0';
             canvas.style.transition = 'opacity 0.5s ease';
             
