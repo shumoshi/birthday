@@ -159,6 +159,8 @@
             const mainContent = document.getElementById('mainContent');
 
             if (input.value === '0625') {
+                document.getElementById('key-audio').currentTime = 0;
+                document.getElementById('key-audio').play();
                 passwordScreen.style.display = 'none';
                 mainContent.classList.add('show');
                 sessionStorage.setItem('authenticated', 'true');
@@ -196,6 +198,10 @@
             box.innerHTML = '';
             startBtnArea.style.display = 'none';
 
+            const letterAudio = document.getElementById('letter-audio');
+            letterAudio.currentTime = 0;
+            letterAudio.play();
+
             let i = 0;
             function typeWriter() {
                 if (i < letterMessage.length) {
@@ -209,10 +215,20 @@
                     setTimeout(typeWriter, 60); // 速度調整
                 } else {
                     startBtnArea.style.display = 'flex';
+                    letterAudio.pause();
+                    letterAudio.currentTime = 0;
                 }
             }
             typeWriter();
         }
+        document.getElementById('startButton').addEventListener('click', function(e){
+      document.getElementById('missionstart-audio').currentTime = 0;
+      document.getElementById('missionstart-audio').play();
+    });
+
     </script>
+    <audio id="key-audio" src="key.mp3"></audio>
+    <audio id="letter-audio" src="letter2.mp3"></audio>
+    <audio id="missionstart-audio" src="missionstart.mp3"></audio>
 </body>
 </html>
