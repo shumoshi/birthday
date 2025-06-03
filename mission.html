@@ -307,6 +307,16 @@
             background: linear-gradient(45deg, #dc3545, #e74c3c) !important;
         }
 
+        @keyframes stampPop {
+  0%   { transform: scale(1);}
+  50%  { transform: scale(1.22);}
+  100% { transform: scale(1);}
+}
+.mission-card.completed.stamp-pop {
+  animation: stampPop 0.6s cubic-bezier(.6,1.7,.9,.8) 1;
+}
+
+
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
             .container {
@@ -477,6 +487,31 @@
             localStorage.setItem('completed', JSON.stringify(completed));
             window.location.href = `draw.html?mission=${num}`;
         }
+
+        function completeMission(num) {
+    // クリア音
+    try {
+        document.getElementById('clear-audio').currentTime = 0;
+        document.getElementById('clear-audio').play();
+    } catch(e){}
+
+    // スタンプ演出（今表示されてる未クリアカードだけPopアニメ）
+    const grid = document.getElementById('missionGrid');
+    const cards = grid.querySelectorAll('.mission-card');
+    cards.forEach(card => {
+      if (!card.classList.contains('completed')) {
+        card.classList.add('stamp-pop');
+        setTimeout(()=>{ card.classList.remove('stamp-pop'); }, 700);
+      }
+    });
+
+    // 以降は元の処理
+    completed.push(num);
+    localStorage.setItem('completed', JSON.stringify(completed));
+    window.location.href = `draw.html?mission=${num}`;
+}
+
+
 
         function checkPrice(num) {
             const input = document.getElementById(`price${num}`);
@@ -664,6 +699,20 @@
         }
 
         window.addEventListener('load', init);
+
+        window.addEventListener('load', function() {
+    const bgm = document.getElementById('bgm-audio');
+    if (bgm) {
+        bgm.volume = 0.12;  // ←お好みで調整。0.05~0.15がBGMっぽい
+        // iOSは自動再生ブロックされる時もあるので、
+        // ユーザー操作（ボタンクリック等）でも play させる工夫があるとさらに安心
+        bgm.play().catch(()=>{});
+    }
+});
+
     </script>
+    <audio id="bgm-audio" src="bgm.mp3" loop></audio>
+    <audio id="clear-audio" src="clear.mp3"></audio>
+
 </body>
 </html>
