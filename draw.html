@@ -284,11 +284,19 @@
         // 音声管理
         const scratchAudio = document.getElementById('scratchSound');
         let isAudioPlaying = false;
+        let fadeOutTimer = null;
 
         // 音声開始
         function startScratchSound() {
+            // フェードアウトタイマーがあったらキャンセル
+            if (fadeOutTimer) {
+                clearTimeout(fadeOutTimer);
+                fadeOutTimer = null;
+            }
+            
             if (!isAudioPlaying) {
                 scratchAudio.currentTime = 0; // 最初から再生
+                scratchAudio.volume = 1.0;
                 scratchAudio.play().catch(e => {
                     console.log('音声再生に失敗:', e);
                 });
@@ -306,18 +314,18 @@
 
         // 音声フェードアウト（なめらかに停止）
         function fadeOutScratchSound() {
-            if (isAudioPlaying) {
-                const fadeInterval = setInterval(() => {
-                    if (scratchAudio.volume > 0.1) {
-                        scratchAudio.volume -= 0.1;
-                    } else {
-                        scratchAudio.pause();
-                        scratchAudio.volume = 1.0; // 音量を元に戻す
-                        isAudioPlaying = false;
-                        clearInterval(fadeInterval);
-                    }
-                }, 50);
+            // 少し遅延させてから停止（手が一瞬離れても音が途切れないように）
+            if (fadeOutTimer) {
+                clearTimeout(fadeOutTimer);
             }
+            
+            fadeOutTimer = setTimeout(() => {
+                if (isAudioPlaying) {
+                    scratchAudio.pause();
+                    isAudioPlaying = false;
+                }
+                fadeOutTimer = null;
+            }, 100); // 100ms後に停止
         }
 
         // 景品データ
@@ -462,6 +470,7 @@
             
             function scratch(e) {
                 if (!isScratching) return;
+                startScratchSound(); // 擦ってる間は音を鳴らし続ける
                 scratchAt(getEventPos(e));
             }
             
@@ -539,6 +548,7 @@
             
             function scratch(e) {
                 if (!isScratching) return;
+                startScratchSound(); // 擦ってる間は音を鳴らし続ける
                 scratchAt(getEventPos(e));
             }
             
