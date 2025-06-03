@@ -193,33 +193,37 @@
         });
 
         // 手紙アニメーション
-        function startLetterAnimation() {
-            const box = document.getElementById('letterBox');
-            const startBtnArea = document.getElementById('startButtonArea');
-            box.innerHTML = '';
-            startBtnArea.style.display = 'none';
+function startLetterAnimation() {
+    const box = document.getElementById('letterBox');
+    const startBtnArea = document.getElementById('startButtonArea');
+    box.innerHTML = '';
+    startBtnArea.style.display = 'none';
 
-            const letterAudio = document.getElementById('letter-audio');
-            letterAudio.currentTime = 0;
-            letterAudio.play().catch(()=>{});
+    const letterAudio = document.getElementById('letter-audio');
+    letterAudio.currentTime = 0;
+    letterAudio.loop = true;  // ループ再生を有効にする
+    letterAudio.play().catch(()=>{});
 
-            let i = 0;
-            function typeWriter() {
-                if (i < letterMessage.length) {
-                    let char = letterMessage[i];
-                    if (char === "\n") {
-                        box.innerHTML += "<br>";
-                    } else {
-                        box.innerHTML += char;
-                    }
-                    i++;
-                    setTimeout(typeWriter, 60); // 速度調整
-                } else {
-                    startBtnArea.style.display = 'flex';
-                }
+    let i = 0;
+    function typeWriter() {
+        if (i < letterMessage.length) {
+            let char = letterMessage[i];
+            if (char === "\n") {
+                box.innerHTML += "<br>";
+            } else {
+                box.innerHTML += char;
             }
-            typeWriter();
+            i++;
+            setTimeout(typeWriter, 60);
+        } else {
+            // アニメーション終了時に音楽を停止
+            letterAudio.pause();
+            letterAudio.loop = false;
+            startBtnArea.style.display = 'flex';
         }
+    }
+    typeWriter();
+}
     </script>
 </body>
 </html>
